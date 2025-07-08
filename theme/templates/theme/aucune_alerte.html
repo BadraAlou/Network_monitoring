@@ -1,0 +1,13 @@
+{% extends './base.html' %}
+{% block title %}Aucune alerte critique{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center h-96 text-center text-gray-600">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M13 16h-1v-4h-1m1-4h.01M12 20.5C6.477 20.5 2 16.023 2 10.5S6.477 0.5 12 0.5 22 4.977 22 10.5 17.523 20.5 12 20.5z" />
+  </svg>
+  <h2 class="text-xl font-bold mb-2">Aucune alerte critique ou élevée</h2>
+  <p class="text-sm">Tout est calme pour le moment. Votre réseau est sécurisé.</p>
+</div>
+{% endblock %}

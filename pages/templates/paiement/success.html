@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section class="py-20 bg-green-50 text-center">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold text-green-700 mb-4">🎉 Paiement réussi !</h1>
+    <p class="text-lg text-gray-700 mb-6">
+      Merci {{ request.user.username }}. Votre paiement a bien été enregistré.
+    </p>
+    <a href="/dashboard/" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">Accéder à mon tableau de bord</a>
+  </div>
+</section>
+</body>
+</html>

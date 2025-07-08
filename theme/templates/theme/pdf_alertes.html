@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Alertes Réseau</title>
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 5px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center;">Rapport des Alertes Réseau</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Appareil</th>
+                <th>IP</th>
+                <th>Type</th>
+                <th>Gravité</th>
+                <th>Description</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in alertes %}
+            <tr>
+                <td>{{ a.device.hostname|default:"Inconnu" }}</td>
+                <td>{{ a.device.ip_address }}</td>
+                <td>{{ a.alert_type }}</td>
+                <td>{{ a.severity }}</td>
+                <td>{{ a.description }}</td>
+                <td>{{ a.detected_on|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

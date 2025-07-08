@@ -1,0 +1,681 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Appareils Connectés | 2IEM_Security{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+  <!-- Header avec filtres et recherche -->
+  <div class="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
+    <div class="px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            Appareils Connectés
+          </h1>
+          <p class="text-gray-600 mt-1">Surveillance et gestion des dispositifs réseau en temps réel</p>
+        </div>
+
+        <!-- Contrôles -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="relative">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Rechercher un appareil..."
+              class="w-full sm:w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            >
+            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+
+          <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+            <option value="">Tous les statuts</option>
+            <option value="online">En ligne</option>
+            <option value="offline">Hors ligne</option>
+            <option value="unknown">Non scanné</option>
+          </select>
+
+          <button onclick="refreshDevices()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Actualiser
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Métriques avec animations améliorées -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total appareils -->
+      <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/20 group hover:scale-105">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Appareils</p>
+            <p class="text-4xl font-bold text-gray-900 mt-2" id="total-devices">{{ total_devices }}</p>
+            <p class="text-sm text-blue-600 mt-1 font-medium">Dispositifs détectés</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300 shadow-lg">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- En ligne -->
+      <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/20 group hover:scale-105">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">En Ligne</p>
+            <p class="text-4xl font-bold text-green-600 mt-2" id="online-devices">{{ total_online }}</p>
+            <p class="text-sm text-green-600 mt-1 font-medium">{% widthratio total_online total_devices 100 %}% actifs</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300 shadow-lg">
+            <div class="w-6 h-6 bg-white rounded-full animate-pulse flex items-center justify-center">
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hors ligne -->
+      <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/20 group hover:scale-105">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Hors Ligne</p>
+            <p class="text-4xl font-bold text-red-600 mt-2" id="offline-devices">{{ total_offline }}</p>
+            <p class="text-sm text-red-600 mt-1 font-medium">Nécessite attention</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center group-hover:from-red-600 group-hover:to-red-700 transition-all duration-300 shadow-lg">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temps de réponse moyen -->
+      <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/20 group hover:scale-105">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Latence Moyenne</p>
+            <p class="text-4xl font-bold text-amber-600 mt-2" id="avg-latency">--</p>
+            <p class="text-sm text-amber-600 mt-1 font-medium">Temps de réponse</p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl flex items-center justify-center group-hover:from-amber-600 group-hover:to-amber-700 transition-all duration-300 shadow-lg">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions en lot -->
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-4 mb-6 border border-white/20" id="bulk-actions" style="display: none;">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-gray-700">
+            <span id="selected-count">0</span> appareil(s) sélectionné(s)
+          </span>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="bulkPing()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-md hover:shadow-lg">
+            Ping en lot
+          </button>
+          <button onclick="bulkScan()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-md hover:shadow-lg">
+            Scanner en lot
+          </button>
+          <button onclick="clearSelection()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-md hover:shadow-lg">
+            Désélectionner
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tableau moderne des appareils -->
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+      <!-- Header du tableau -->
+      <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-6 py-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z"></path>
+            </svg>
+            Détails des Appareils
+          </h2>
+          <div class="flex items-center gap-2 text-white/90 text-sm bg-white/10 px-3 py-1 rounded-full">
+            <span id="filtered-count">{{ devices|length }}</span> résultat(s)
+          </div>
+        </div>
+      </div>
+
+      <!-- Tableau -->
+      <div class="overflow-x-auto">
+        <div class="max-h-[600px] overflow-y-auto">
+          <table class="w-full divide-y divide-gray-200" id="devicesTable">
+            <thead class="bg-gray-50/80 backdrop-blur-sm sticky top-0">
+              <tr>
+                <th class="px-6 py-3 text-left">
+                  <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-colors">
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100/50 transition-colors rounded-lg" onclick="sortTable('hostname')">
+                  <div class="flex items-center gap-1">
+                    Nom d'hôte
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    </svg>
+                  </div>
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100/50 transition-colors rounded-lg" onclick="sortTable('ip')">
+                  <div class="flex items-center gap-1">
+                    Adresse IP
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    </svg>
+                  </div>
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Adresse MAC
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Système
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100/50 transition-colors rounded-lg" onclick="sortTable('response_time')">
+                  <div class="flex items-center gap-1">
+                    Latence
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    </svg>
+                  </div>
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Statut
+                </th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white/50 backdrop-blur-sm divide-y divide-gray-200" id="devicesTableBody">
+              {% for device in devices %}
+              <tr class="hover:bg-blue-50/50 transition-all duration-200 device-row"
+                  data-hostname="{{ device.hostname|lower }}"
+                  data-ip="{{ device.ip_address }}"
+                  data-status="{{ device.status }}"
+                  data-response-time="{{ device.response_time|default:0 }}">
+                <td class="px-6 py-4">
+                  <input type="checkbox" class="device-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-colors" value="{{ device.id }}">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-600 rounded-lg flex items-center justify-center shadow-md">
+                      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-900">{{ device.hostname }}</p>
+                      <p class="text-sm text-gray-500">Dernière détection: {{ device.last_seen|date:"H:i" }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span class="font-mono text-sm text-gray-900 bg-gray-100 px-2 py-1 rounded">{{ device.ip_address }}</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="font-mono text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                    {{ device.mac_address|default:"—" }}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    {% if device.os %}
+                      <div class="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                      </div>
+                      <span class="text-sm text-gray-900 bg-blue-50 px-2 py-1 rounded">{{ device.os }}</span>
+                    {% else %}
+                      <span class="text-sm text-gray-400">Inconnu</span>
+                    {% endif %}
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  {% if device.response_time %}
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span class="text-sm font-medium text-gray-900 bg-green-50 px-2 py-1 rounded">{{ device.response_time }} ms</span>
+                    </div>
+                  {% else %}
+                    <span class="text-sm text-gray-400">N/A</span>
+                  {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                  {% if device.status == "online" %}
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 shadow-sm">
+                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      En ligne
+                    </span>
+                  {% elif device.status == "offline" %}
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 shadow-sm">
+                      <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                      Hors ligne
+                    </span>
+                  {% else %}
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 shadow-sm">
+                      <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      Non scanné
+                    </span>
+                  {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center justify-center gap-2">
+                    <button onclick="pingDevice('{{ device.ip_address }}')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-all duration-200 hover:scale-110" title="Ping">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+                      </svg>
+                    </button>
+                    <button onclick="scanDevice('{{ device.ip_address }}')" class="p-2 text-yellow-600 hover:bg-yellow-100 rounded-lg transition-all duration-200 hover:scale-110" title="Scanner">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                      </svg>
+                    </button>
+                    <a href="{% url 'theme:details_device' device.id %}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200 hover:scale-110" title="Détails">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" class="px-6 py-12 text-center">
+                  <div class="flex flex-col items-center gap-3">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                      <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                      </svg>
+                    </div>
+                    <p class="text-gray-500 font-medium">Aucun appareil détecté</p>
+                    <p class="text-gray-400 text-sm">Lancez un scan réseau pour découvrir les appareils</p>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications -->
+<div id="notifications" class="fixed top-20 right-4 z-50 space-y-2"></div>
+
+<script>
+// ===== FONCTIONS SPÉCIFIQUES À LA PAGE APPAREILS =====
+// Note: La logique du sidebar est déjà gérée dans base.html
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 Initialisation de la page appareils...');
+  initializeDevicesPage();
+});
+
+function initializeDevicesPage() {
+  console.log('📱 Initialisation de la page appareils...');
+
+  // Variables globales
+  window.sortDirection = {};
+  window.selectedDevices = [];
+
+  initializeEventListeners();
+  calculateAverageLatency();
+  updateFilteredCount();
+  animateCards();
+
+  console.log('✅ Page appareils initialisée');
+}
+
+// Event listeners
+function initializeEventListeners() {
+  // Recherche en temps réel
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', filterDevices);
+  }
+
+  // Filtre par statut
+  const statusFilter = document.getElementById('statusFilter');
+  if (statusFilter) {
+    statusFilter.addEventListener('change', filterDevices);
+  }
+
+  // Sélection globale
+  const selectAll = document.getElementById('selectAll');
+  if (selectAll) {
+    selectAll.addEventListener('change', function() {
+      const checkboxes = document.querySelectorAll('.device-checkbox:not([style*="display: none"])');
+      checkboxes.forEach(cb => {
+        cb.checked = this.checked;
+      });
+      updateSelectedDevices();
+    });
+  }
+
+  // Sélection individuelle
+  document.querySelectorAll('.device-checkbox').forEach(cb => {
+    cb.addEventListener('change', updateSelectedDevices);
+  });
+}
+
+// Filtrage des appareils
+function filterDevices() {
+  const searchInput = document.getElementById('searchInput');
+  const statusFilter = document.getElementById('statusFilter');
+
+  if (!searchInput || !statusFilter) return;
+
+  const searchTerm = searchInput.value.toLowerCase();
+  const statusFilterValue = statusFilter.value;
+  const rows = document.querySelectorAll('.device-row');
+  let visibleCount = 0;
+
+  rows.forEach(row => {
+    const hostname = row.dataset.hostname;
+    const ip = row.dataset.ip;
+    const status = row.dataset.status;
+
+    const matchesSearch = hostname.includes(searchTerm) || ip.includes(searchTerm);
+    const matchesStatus = !statusFilterValue || status === statusFilterValue;
+
+    if (matchesSearch && matchesStatus) {
+      row.style.display = '';
+      visibleCount++;
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const filteredCount = document.getElementById('filtered-count');
+  if (filteredCount) {
+    filteredCount.textContent = visibleCount;
+  }
+  updateSelectedDevices();
+}
+
+// Tri du tableau
+function sortTable(column) {
+  const tbody = document.getElementById('devicesTableBody');
+  if (!tbody) return;
+
+  const rows = Array.from(tbody.querySelectorAll('.device-row'));
+
+  // Déterminer la direction du tri
+  window.sortDirection[column] = window.sortDirection[column] === 'asc' ? 'desc' : 'asc';
+
+  rows.sort((a, b) => {
+    let aVal, bVal;
+
+    switch(column) {
+      case 'hostname':
+        aVal = a.dataset.hostname;
+        bVal = b.dataset.hostname;
+        break;
+      case 'ip':
+        aVal = a.dataset.ip;
+        bVal = b.dataset.ip;
+        break;
+      case 'response_time':
+        aVal = parseInt(a.dataset.responseTime) || 0;
+        bVal = parseInt(b.dataset.responseTime) || 0;
+        break;
+      default:
+        return 0;
+    }
+
+    if (column === 'response_time') {
+      return window.sortDirection[column] === 'asc' ? aVal - bVal : bVal - aVal;
+    } else {
+      if (aVal < bVal) return window.sortDirection[column] === 'asc' ? -1 : 1;
+      if (aVal > bVal) return window.sortDirection[column] === 'asc' ? 1 : -1;
+      return 0;
+    }
+  });
+
+  // Réorganiser les lignes
+  rows.forEach(row => tbody.appendChild(row));
+
+  showNotification(`Tableau trié par ${column} (${window.sortDirection[column] === 'asc' ? 'croissant' : 'décroissant'})`, 'info');
+}
+
+// Gestion de la sélection
+function updateSelectedDevices() {
+  const checkboxes = document.querySelectorAll('.device-checkbox');
+  const visibleCheckboxes = Array.from(checkboxes).filter(cb =>
+    cb.closest('.device-row').style.display !== 'none'
+  );
+
+  window.selectedDevices = Array.from(checkboxes)
+    .filter(cb => cb.checked)
+    .map(cb => cb.value);
+
+  const selectedCount = window.selectedDevices.length;
+  const selectedCountEl = document.getElementById('selected-count');
+  if (selectedCountEl) {
+    selectedCountEl.textContent = selectedCount;
+  }
+
+  const bulkActions = document.getElementById('bulk-actions');
+  if (bulkActions) {
+    if (selectedCount > 0) {
+      bulkActions.style.display = 'block';
+    } else {
+      bulkActions.style.display = 'none';
+    }
+  }
+
+  // Mettre à jour la case "Tout sélectionner"
+  const selectAll = document.getElementById('selectAll');
+  if (selectAll) {
+    const checkedVisible = visibleCheckboxes.filter(cb => cb.checked).length;
+    selectAll.checked = checkedVisible === visibleCheckboxes.length && visibleCheckboxes.length > 0;
+    selectAll.indeterminate = checkedVisible > 0 && checkedVisible < visibleCheckboxes.length;
+  }
+}
+
+// Actions individuelles
+function pingDevice(ip) {
+  showNotification(`Ping en cours vers ${ip}...`, 'info');
+
+  // Simuler un ping (remplacez par votre logique)
+  setTimeout(() => {
+    const success = Math.random() > 0.3; // 70% de succès
+    const latency = Math.floor(Math.random() * 50 + 10);
+    if (success) {
+      showNotification(`✅ Ping réussi vers ${ip} (${latency}ms)`, 'success');
+    } else {
+      showNotification(`❌ Ping échoué vers ${ip}`, 'error');
+    }
+  }, 2000);
+}
+
+function scanDevice(ip) {
+  showNotification(`🔍 Scan en cours de ${ip}...`, 'info');
+
+  // Rediriger vers la page de scan
+  setTimeout(() => {
+    window.location.href = ``;
+  }, 1000);
+}
+
+// Actions en lot
+function bulkPing() {
+  if (window.selectedDevices.length === 0) return;
+
+  showNotification(`🚀 Ping en lot de ${window.selectedDevices.length} appareils...`, 'info');
+
+  // Implémenter votre logique de ping en lot
+  setTimeout(() => {
+    showNotification(`✅ Ping en lot terminé pour ${window.selectedDevices.length} appareils`, 'success');
+  }, 3000);
+}
+
+function bulkScan() {
+  if (window.selectedDevices.length === 0) return;
+
+  showNotification(`🔍 Scan en lot de ${window.selectedDevices.length} appareils...`, 'info');
+
+  // Implémenter votre logique de scan en lot
+  setTimeout(() => {
+    showNotification(`✅ Scan en lot terminé pour ${window.selectedDevices.length} appareils`, 'success');
+  }, 5000);
+}
+
+function clearSelection() {
+  document.querySelectorAll('.device-checkbox').forEach(cb => cb.checked = false);
+  const selectAll = document.getElementById('selectAll');
+  if (selectAll) {
+    selectAll.checked = false;
+  }
+  updateSelectedDevices();
+  showNotification('Sélection effacée', 'info');
+}
+
+// Actualisation des données
+function refreshDevices() {
+  showNotification('🔄 Actualisation des appareils...', 'info');
+
+  // Ajouter une animation de chargement
+  const refreshBtn = document.querySelector('button[onclick="refreshDevices()"]');
+  if (!refreshBtn) return;
+
+  const originalContent = refreshBtn.innerHTML;
+
+  refreshBtn.innerHTML = `
+    <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+    </svg>
+    Actualisation...
+  `;
+  refreshBtn.disabled = true;
+
+  // Simuler l'actualisation (remplacez par votre logique)
+  setTimeout(() => {
+    refreshBtn.innerHTML = originalContent;
+    refreshBtn.disabled = false;
+    showNotification('✅ Appareils actualisés avec succès', 'success');
+    location.reload(); // Ou utilisez AJAX pour actualiser les données
+  }, 2000);
+}
+
+// Calcul de la latence moyenne
+function calculateAverageLatency() {
+  const rows = document.querySelectorAll('.device-row');
+  let totalLatency = 0;
+  let count = 0;
+
+  rows.forEach(row => {
+    const latency = parseInt(row.dataset.responseTime);
+    if (latency > 0) {
+      totalLatency += latency;
+      count++;
+    }
+  });
+
+  const avgLatency = count > 0 ? Math.round(totalLatency / count) : 0;
+  const avgLatencyEl = document.getElementById('avg-latency');
+  if (avgLatencyEl) {
+    avgLatencyEl.textContent = avgLatency > 0 ? `${avgLatency} ms` : '--';
+  }
+}
+
+// Mise à jour du compteur filtré
+function updateFilteredCount() {
+  const visibleRows = document.querySelectorAll('.device-row:not([style*="display: none"])');
+  const filteredCount = document.getElementById('filtered-count');
+  if (filteredCount) {
+    filteredCount.textContent = visibleRows.length;
+  }
+}
+
+// Système de notifications amélioré
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  const colors = {
+    success: 'bg-gradient-to-r from-green-500 to-green-600 border-green-400',
+    error: 'bg-gradient-to-r from-red-500 to-red-600 border-red-400',
+    warning: 'bg-gradient-to-r from-yellow-500 to-yellow-600 border-yellow-400',
+    info: 'bg-gradient-to-r from-blue-500 to-blue-600 border-blue-400'
+  };
+
+  const icons = {
+    success: '✅',
+    error: '❌',
+    warning: '⚠️',
+    info: 'ℹ️'
+  };
+
+  notification.className = `${colors[type]} text-white px-6 py-4 rounded-lg shadow-xl transform transition-all duration-300 translate-x-full border-l-4 backdrop-blur-sm`;
+  notification.innerHTML = `
+    <div class="flex items-center gap-3">
+      <span class="text-lg">${icons[type]}</span>
+      <span class="font-medium">${message}</span>
+    </div>
+  `;
+
+  const notifications = document.getElementById('notifications');
+  if (notifications) {
+    notifications.appendChild(notification);
+
+    // Animation d'entrée
+    setTimeout(() => {
+      notification.classList.remove('translate-x-full');
+    }, 100);
+
+    // Suppression automatique
+    setTimeout(() => {
+      notification.classList.add('translate-x-full');
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    }, 4000);
+  }
+}
+
+// Animation d'entrée pour les cartes
+function animateCards() {
+  const cards = document.querySelectorAll('.bg-white\\/90, .bg-white\\/80');
+  cards.forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      card.style.transition = 'all 0.6s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, index * 100);
+  });
+}
+</script>
+{% endblock %}

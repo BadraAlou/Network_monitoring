@@ -1,0 +1,130 @@
+{% extends "pages/base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <h1 class="text-4xl font-extrabold text-gray-900 mb-6">Télécharger les dépendances</h1>
+
+  {% if user.abonnement and user.abonnement.est_valide %}
+  <div class="mb-8">
+    <a href="{% url 'theme:telecharger_dependances' %}"
+       class="inline-flex items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 12h18M12 3v18"/>
+      </svg>
+      Télécharger l’archive
+    </a>
+  </div>
+  {% else %}
+  <div class="space-y-4 mb-8 text-gray-700">
+    <p>Votre licence n’est pas valide pour le moment. <a href="{% url 'pages:activer_licence' %}"
+       class="text-blue-600 hover:underline">Activer votre licence</a></p>
+    <p>Vous souhaitez accéder à toutes les fonctionnalités ? <a href="{% url 'pages:acheter' %}"
+       class="text-blue-600 hover:underline">Acheter une version</a></p>
+  </div>
+  {% endif %}
+
+  <h2 class="text-2xl font-bold text-gray-800 mb-4">Nos dépendances principales</h2>
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Django -->
+    <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col">
+      <div class="flex-1">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-original.svg"
+             alt="Django" class="w-12 h-12 mb-4"/>
+        <h3 class="text-xl font-semibold mb-2">Django</h3>
+        <p class="text-gray-600 mb-4">Le framework web Python sur lequel repose toute l’application.</p>
+      </div>
+      <div class="mt-auto space-y-2">
+        <a href="https://www.djangoproject.com/" target="_blank"
+           class="block text-blue-600 hover:underline">Documentation</a>
+        <code class="block bg-gray-100 rounded px-2 py-1 text-sm text-gray-800">pip install Django</code>
+      </div>
+    </div>
+
+    <!-- Django REST Framework -->
+    <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col">
+      <div class="flex-1">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-original.svg"
+             alt="DRF" class="w-12 h-12 mb-4"/>
+        <h3 class="text-xl font-semibold mb-2">Django REST Framework</h3>
+        <p class="text-gray-600 mb-4">Pour créer nos APIs d’alertes et d’événements.</p>
+      </div>
+      <div class="mt-auto space-y-2">
+        <a href="https://www.django-rest-framework.org/" target="_blank"
+           class="block text-blue-600 hover:underline">Documentation</a>
+        <code class="block bg-gray-100 rounded px-2 py-1 text-sm text-gray-800">
+          pip install djangorestframework
+        </code>
+      </div>
+    </div>
+
+    <!-- python-nmap -->
+    <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col">
+      <div class="flex-1">
+        <img src="https://raw.githubusercontent.com/haypo/python-nmap/master/icon.png"
+             alt="python-nmap" class="w-12 h-12 mb-4"/>
+        <h3 class="text-xl font-semibold mb-2">python-nmap</h3>
+        <p class="text-gray-600 mb-4">Interface Python pour piloter Nmap directement.</p>
+      </div>
+      <div class="mt-auto space-y-2">
+        <a href="https://pypi.org/project/python-nmap/" target="_blank"
+           class="block text-blue-600 hover:underline">PyPI</a>
+        <code class="block bg-gray-100 rounded px-2 py-1 text-sm text-gray-800">
+          pip install python-nmap
+        </code>
+      </div>
+    </div>
+
+    <!-- netifaces -->
+    <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col">
+      <div class="flex-1">
+        <img src="https://raw.githubusercontent.com/al45tair/netifaces/master/icon/netifaces-logo-green.png"
+             alt="netifaces" class="w-12 h-12 mb-4"/>
+        <h3 class="text-xl font-semibold mb-2">netifaces</h3>
+        <p class="text-gray-600 mb-4">Pour détecter automatiquement le sous-réseau local.</p>
+      </div>
+      <div class="mt-auto space-y-2">
+        <a href="https://pypi.org/project/netifaces/" target="_blank"
+           class="block text-blue-600 hover:underline">PyPI</a>
+        <code class="block bg-gray-100 rounded px-2 py-1 text-sm text-gray-800">
+          pip install netifaces
+        </code>
+      </div>
+    </div>
+
+    <!-- stripe -->
+    <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col">
+      <div class="flex-1">
+        <img src="https://stripe.com/img/v3/home/twitter.png"
+             alt="Stripe" class="w-12 h-12 mb-4"/>
+        <h3 class="text-xl font-semibold mb-2">stripe</h3>
+        <p class="text-gray-600 mb-4">SDK pour intégrer le paiement par carte bancaire (test).</p>
+      </div>
+      <div class="mt-auto space-y-2">
+        <a href="https://pypi.org/project/stripe/" target="_blank"
+           class="block text-blue-600 hover:underline">PyPI</a>
+        <code class="block bg-gray-100 rounded px-2 py-1 text-sm text-gray-800">
+          pip install stripe
+        </code>
+      </div>
+    </div>
+
+    <!-- django-tailwind -->
+    <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col">
+      <div class="flex-1">
+        <img src="https://raw.githubusercontent.com/tailwindlabs/tailwindcss/master/logo.svg"
+             alt="Tailwind CSS" class="w-12 h-12 mb-4"/>
+        <h3 class="text-xl font-semibold mb-2">django-tailwind</h3>
+        <p class="text-gray-600 mb-4">Plugin pour intégrer Tailwind CSS à Django.</p>
+      </div>
+      <div class="mt-auto space-y-2">
+        <a href="https://github.com/timonweb/django-tailwind" target="_blank"
+           class="block text-blue-600 hover:underline">GitHub</a>
+        <code class="block bg-gray-100 rounded px-2 py-1 text-sm text-gray-800">
+          pip install django-tailwind
+        </code>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

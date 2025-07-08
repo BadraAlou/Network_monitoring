@@ -1,0 +1,696 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Détails - {{ device.hostname }} | 2IEM_Security{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+  <!-- Header avec breadcrumb -->
+  <div class="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
+    <div class="px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <!-- Breadcrumb -->
+          <nav class="flex mb-3" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
+                <a href="{% url 'theme:dashboard' %}" class="text-gray-500 hover:text-blue-600 transition-colors">
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <a href="{% url 'theme:liste_ordinateurs' %}" class="ml-1 text-gray-500 hover:text-blue-600 transition-colors">Appareils</a>
+                </div>
+              </li>
+              <li aria-current="page">
+                <div class="flex items-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span class="ml-1 text-gray-700 font-medium">{{ device.hostname }}</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+
+          <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            {{ device.hostname }}
+          </h1>
+          <p class="text-gray-600 mt-1">Informations détaillées et analyse de sécurité</p>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button onclick="pingDevice('{{ device.ip_address }}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+            </svg>
+            Ping
+          </button>
+          <button onclick="scanDevice('{{ device.ip_address }}')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Scanner
+          </button>
+          <button onclick="refreshData()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Actualiser
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Statut en temps réel -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Statut en Temps Réel</h2>
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse" id="status-indicator"></div>
+          <span class="text-sm text-gray-600" id="last-check">Dernière vérification: {% now "H:i:s" %}</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"></path>
+            </svg>
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Adresse IP</p>
+          <p class="font-semibold text-gray-900">{{ device.ip_address }}</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"></path>
+            </svg>
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Adresse MAC</p>
+          <p class="font-semibold text-gray-900 font-mono text-xs">{{ device.mac_address|default:"Non disponible" }}</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Système</p>
+          <p class="font-semibold text-gray-900">{{ device.os|default:"Inconnu" }}</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 {% if device.status == 'online' %}bg-green-100{% elif device.status == 'offline' %}bg-red-100{% else %}bg-gray-100{% endif %} rounded-xl flex items-center justify-center mx-auto mb-3">
+            {% if device.status == "online" %}
+              <div class="w-8 h-8 bg-green-500 rounded-full animate-pulse"></div>
+            {% elif device.status == "offline" %}
+              <div class="w-8 h-8 bg-red-500 rounded-full"></div>
+            {% else %}
+              <div class="w-8 h-8 bg-gray-400 rounded-full"></div>
+            {% endif %}
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Statut</p>
+          {% if device.status == "online" %}
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              En ligne
+            </span>
+          {% elif device.status == "offline" %}
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+              Hors ligne
+            </span>
+          {% else %}
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+              Inconnu
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Latence</p>
+          <p class="font-semibold text-gray-900" id="current-latency">{{ device.response_time|default:'0' }} ms</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 {% if device.vulnerabilities %}bg-red-100{% else %}bg-green-100{% endif %} rounded-xl flex items-center justify-center mx-auto mb-3">
+            {% if device.vulnerabilities %}
+              <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            {% else %}
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            {% endif %}
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Sécurité</p>
+          {% if device.vulnerabilities %}
+            <p class="font-semibold text-red-600">{{ device.vulnerabilities }} vulnérabilité{{ device.vulnerabilities|pluralize }}</p>
+          {% else %}
+            <p class="font-semibold text-green-600">Sécurisé</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertes récentes -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          Alertes Récentes
+        </h2>
+        {% if alertes %}
+          <span class="bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded-full">
+            {{ alertes|length }} alerte{{ alertes|length|pluralize }}
+          </span>
+        {% endif %}
+      </div>
+
+      {% if alertes %}
+        <div class="space-y-4">
+          {% for alert in alertes %}
+          <div class="flex items-start gap-4 p-4 {% if alert.severity == 'critique' %}bg-red-50 border-l-4 border-red-500{% elif alert.severity == 'élevée' %}bg-orange-50 border-l-4 border-orange-500{% elif alert.severity == 'moyenne' %}bg-yellow-50 border-l-4 border-yellow-500{% else %}bg-blue-50 border-l-4 border-blue-500{% endif %} rounded-lg">
+            <div class="flex-shrink-0">
+              {% if alert.severity == 'critique' %}
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                  </svg>
+                </div>
+              {% elif alert.severity == 'élevée' %}
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              {% else %}
+                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              {% endif %}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-medium {% if alert.severity == 'critique' %}text-red-800{% elif alert.severity == 'élevée' %}text-orange-800{% elif alert.severity == 'moyenne' %}text-yellow-800{% else %}text-blue-800{% endif %}">
+                  [{{ alert.severity|upper }}] {{ alert.alert_type }}
+                </p>
+                <span class="text-xs text-gray-500">{{ alert.detected_on|date:"d/m/Y H:i" }}</span>
+              </div>
+              <p class="text-sm {% if alert.severity == 'critique' %}text-red-700{% elif alert.severity == 'élevée' %}text-orange-700{% elif alert.severity == 'moyenne' %}text-yellow-700{% else %}text-blue-700{% endif %} mt-1">
+                {{ alert.description }}
+              </p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-8">
+          <svg class="w-16 h-16 text-green-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+          <p class="text-gray-500 font-medium">Aucune alerte récente</p>
+          <p class="text-gray-400 text-sm">Cet appareil fonctionne normalement</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Vulnérabilités détectées -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+          <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+          Analyse de Sécurité
+        </h2>
+        <button onclick="runSecurityScan()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+          Nouveau scan
+        </button>
+      </div>
+
+      {% if device.vulnerabilities_list %}
+        <div class="grid gap-4 md:grid-cols-2">
+          {% for vuln in device.vulnerabilities_list %}
+            {% if "critique" in vuln|lower %}
+              <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded">CRITIQUE</span>
+                      <span class="text-xs text-red-600">Action immédiate requise</span>
+                    </div>
+                    <p class="text-red-800 text-sm">{{ vuln|escape }}</p>
+                  </div>
+                </div>
+              </div>
+            {% elif "élevée" in vuln|lower %}
+              <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded">ÉLEVÉE</span>
+                      <span class="text-xs text-orange-600">Correction recommandée</span>
+                    </div>
+                    <p class="text-orange-800 text-sm">{{ vuln|escape }}</p>
+                  </div>
+                </div>
+              </div>
+            {% elif "moyenne" in vuln|lower %}
+              <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded">MOYENNE</span>
+                      <span class="text-xs text-yellow-600">Surveillance requise</span>
+                    </div>
+                    <p class="text-yellow-800 text-sm">{{ vuln|escape }}</p>
+                  </div>
+                </div>
+              </div>
+            {% elif "faible" in vuln|lower %}
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded">FAIBLE</span>
+                      <span class="text-xs text-blue-600">Risque minimal</span>
+                    </div>
+                    <p class="text-blue-800 text-sm">{{ vuln|escape }}</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-8">
+          <svg class="w-16 h-16 text-green-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+          <p class="text-gray-500 font-medium">Aucune vulnérabilité détectée</p>
+          <p class="text-gray-400 text-sm">Cet appareil semble sécurisé</p>
+        </div>
+      {% endif %}
+    </div>
+<!-- Notifications -->
+<div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ===== GESTION DU SIDEBAR (MÊME CORRECTION QUE LA PAGE PRÉCÉDENTE) =====
+document.addEventListener('DOMContentLoaded', function() {
+  initializeSidebar();
+  initializeDeviceDetails();
+});
+
+function initializeSidebar() {
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  const closeSidebar = document.getElementById('close-sidebar');
+
+  function openSidebar() {
+    if (sidebar) {
+      sidebar.classList.remove('-translate-x-full');
+      sidebar.classList.add('translate-x-0');
+    }
+    if (sidebarOverlay) {
+      sidebarOverlay.classList.remove('hidden');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebarFunc() {
+    if (sidebar) {
+      sidebar.classList.add('-translate-x-full');
+      sidebar.classList.remove('translate-x-0');
+    }
+    if (sidebarOverlay) {
+      sidebarOverlay.classList.add('hidden');
+    }
+    document.body.style.overflow = 'auto';
+  }
+
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openSidebar();
+    });
+  }
+
+  if (closeSidebar) {
+    closeSidebar.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeSidebarFunc();
+    });
+  }
+
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeSidebarFunc();
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeSidebarFunc();
+    }
+  });
+
+  window.openSidebar = openSidebar;
+  window.closeSidebar = closeSidebarFunc;
+}
+
+// ===== FONCTIONS DE LA PAGE DÉTAILS =====
+function initializeDeviceDetails() {
+  initializeCharts();
+  startRealTimeUpdates();
+}
+
+// Initialisation des graphiques
+function initializeCharts() {
+  // Graphique temps de réponse
+  const responseCtx = document.getElementById('responseChart');
+  if (responseCtx) {
+    new Chart(responseCtx, {
+      type: 'line',
+      data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+          label: 'Temps de réponse (ms)',
+          data: {{ chart_data|safe }},
+          fill: true,
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 3,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 1,
+            cornerRadius: 8
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: '#6b7280'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              color: '#6b7280'
+            },
+            title: {
+              display: true,
+              text: 'Latence (ms)',
+              color: '#374151'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Graphique disponibilité
+  const availCtx = document.getElementById('availabilityChart');
+  if (availCtx) {
+    new Chart(availCtx, {
+      type: 'line',
+      data: {
+        labels: {{ availability_labels|safe }},
+        datasets: [{
+          label: 'Disponibilité',
+          data: {{ availability_data|safe }},
+          fill: true,
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          borderColor: 'rgba(16, 185, 129, 1)',
+          borderWidth: 3,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
+            borderColor: 'rgba(16, 185, 129, 1)',
+            borderWidth: 1,
+            cornerRadius: 8,
+            callbacks: {
+              label: function(context) {
+                return context.parsed.y === 1 ? 'En ligne' : 'Hors ligne';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: '#6b7280'
+            }
+          },
+          y: {
+            min: 0,
+            max: 1,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              stepSize: 1,
+              color: '#6b7280',
+              callback: function(value) {
+                return value === 1 ? 'En ligne' : 'Hors ligne';
+              }
+            },
+            title: {
+              display: true,
+              text: 'Statut',
+              color: '#374151'
+            }
+          }
+        }
+      }
+    });
+  }
+}
+
+// Actions des boutons
+function pingDevice(ip) {
+  showNotification(`Ping en cours vers ${ip}...`, 'info');
+
+  // Simuler un ping
+  setTimeout(() => {
+    const latency = Math.floor(Math.random() * 100 + 10);
+    const success = Math.random() > 0.2; // 80% de succès
+
+    if (success) {
+      showNotification(`Ping réussi: ${latency}ms`, 'success');
+
+      // Mettre à jour la latence affichée
+      const currentLatencyEl = document.getElementById('current-latency');
+      if (currentLatencyEl) {
+        currentLatencyEl.textContent = `${latency} ms`;
+      }
+    } else {
+      showNotification(`Ping échoué vers ${ip}`, 'error');
+    }
+
+    updateLastCheck();
+  }, 2000);
+}
+
+function scanDevice(ip) {
+  showNotification(`Scan de sécurité en cours...`, 'info');
+
+  // Rediriger vers la page de scan
+  setTimeout(() => {
+    window.location.href = `/scan/${ip}/`;
+  }, 1000);
+}
+
+function runSecurityScan() {
+  showNotification('Lancement du scan de sécurité...', 'info');
+
+  // Simuler un scan de sécurité
+  setTimeout(() => {
+    showNotification('Scan de sécurité terminé', 'success');
+    // Ici vous pourriez recharger la page ou mettre à jour les vulnérabilités
+  }, 5000);
+}
+
+function refreshData() {
+  showNotification('Actualisation des données...', 'info');
+
+  // Simuler l'actualisation
+  setTimeout(() => {
+    showNotification('Données actualisées', 'success');
+    updateLastCheck();
+    location.reload(); // Ou utilisez AJAX pour actualiser les données
+  }, 2000);
+}
+
+// Mises à jour en temps réel
+function startRealTimeUpdates() {
+  // Mettre à jour l'heure de dernière vérification toutes les 30 secondes
+  setInterval(updateLastCheck, 30000);
+
+  // Simuler des mises à jour de statut (optionnel)
+  setInterval(() => {
+    // Ici vous pourriez faire des appels AJAX pour vérifier le statut
+    updateStatusIndicator();
+  }, 60000);
+}
+
+function updateLastCheck() {
+  const lastCheckEl = document.getElementById('last-check');
+  if (lastCheckEl) {
+    const now = new Date();
+    lastCheckEl.textContent = `Dernière vérification: ${now.toLocaleTimeString('fr-FR')}`;
+  }
+}
+
+function updateStatusIndicator() {
+  const indicator = document.getElementById('status-indicator');
+  if (indicator) {
+    // Simuler un changement de statut (vous pourriez faire un appel AJAX ici)
+    const isOnline = Math.random() > 0.1; // 90% de chance d'être en ligne
+
+    if (isOnline) {
+      indicator.className = 'w-3 h-3 bg-green-500 rounded-full animate-pulse';
+    } else {
+      indicator.className = 'w-3 h-3 bg-red-500 rounded-full';
+    }
+  }
+}
+
+// Système de notifications
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  const colors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    warning: 'bg-yellow-500',
+    info: 'bg-blue-500'
+  };
+
+  notification.className = `${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+  notification.textContent = message;
+
+  const notifications = document.getElementById('notifications');
+  if (notifications) {
+    notifications.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.remove('translate-x-full');
+    }, 100);
+
+    setTimeout(() => {
+      notification.classList.add('translate-x-full');
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    }, 4000);
+  }
+}
+
+// Animation d'entrée pour les cartes
+const cards = document.querySelectorAll('.bg-white');
+cards.forEach((card, index) => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(20px)';
+  setTimeout(() => {
+    card.style.transition = 'all 0.6s ease';
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0)';
+  }, index * 100);
+});
+</script>
+{% endblock %}

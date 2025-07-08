@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+{% load static tailwind_tags %}
+{% load static %}
+<html lang="fr" x-data="{ mobileMenuOpen: false, productMenuOpen: false }" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}2IEM_Security{% endblock %}</title>
+     {% tailwind_css %}
+<script>
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("hidden");
+    }
+
+    window.onclick = function(e) {
+      if (!e.target.matches('.dropdown-toggle')) {
+        const dropdowns = document.getElementsByClassName("dropdown-menu");
+        for (let i = 0; i < dropdowns.length; i++) {
+          if (!dropdowns[i].classList.contains("hidden")) {
+            dropdowns[i].classList.add("hidden");
+          }
+        }
+      }
+    }
+  </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<!-- HEADER -->
+<header class="bg-white">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+    <div class="flex lg:flex-1">
+      <a href="{% url 'pages:home' %}" class="-m-1.5 p-1.5 flex items-center space-x-2">
+        <img class="w-auto w-32 h-12 rounded-full object-cover" src="{% static 'images/theme/logo-final.jpg' %}?color=indigo&shade=600" alt="Logo" />
+        <span class="text-xl font-bold text-indigo-700">2IEM_Security</span>
+      </a>
+    </div>
+    <div class="flex lg:hidden">
+      <button @click="mobileMenuOpen = true" type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+        <span class="sr-only">Ouvrir le menu principal</span>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+    <div class="hidden lg:flex lg:gap-x-12 items-center">
+      <a href="{% url 'pages:fonctionnalites' %}" class="text-sm font-semibold text-gray-900">Fonctionnalités</a>
+      <a href="{% url 'pages:versions' %}" class="block text-sm font-semibold text-gray-900">Versions</a>
+      <a href="{% url 'pages:acheter' %}" class="text-sm font-semibold text-gray-900">Tarifs</a>
+      <a href="{% url 'pages:activer_licence' %}" class="text-sm font-semibold text-gray-900">Activation</a>
+      <a href="{% url 'pages:contact' %}" class="text-sm font-semibold text-gray-900">Contact</a>
+    </div>
+    <div class="hidden lg:flex lg:flex-1 lg:justify-end items-center space-x-4">
+      {% if user.is_authenticated %}
+        <span class="text-sm text-gray-800">{{ user.username }}</span>
+        <a href="{% url 'pages:logout' %}" class="text-sm font-semibold text-red-600 hover:underline">Déconnexion</a>
+
+        <a href="{% url 'theme:network_selection' %}"
+            class="text-sm font-medium text-indigo-600 hover:underline">
+            Dashboard
+        </a>
+        {% else %}
+        <a href="{% url 'pages:login' %}" class="text-sm font-semibold text-indigo-600 hover:underline">Se connecter</a>
+        <a href="{% url 'pages:register' %}" class="text-sm font-semibold text-indigo-600 hover:underline">S'inscrire</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <div class="lg:hidden fixed inset-0 z-50 bg-white p-6" x-show="mobileMenuOpen" x-transition>
+    <div class="flex items-center justify-between mb-6">
+      <a href="#" class="flex items-center space-x-2">
+        <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Logo" />
+        <span class="text-xl font-bold text-indigo-700">2IEM_Security</span>
+      </a>
+      <button @click="mobileMenuOpen = false" class="text-gray-600 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <nav class="space-y-4">
+      <a href="{% url 'pages:fonctionnalites' %}" class="block text-sm font-semibold text-gray-900">Fonctionnalités</a>
+      <a href="{% url 'pages:versions' %}" class="block text-sm font-semibold text-gray-900">Versions</a>
+      <a href="{% url 'pages:acheter' %}" class="block text-sm font-semibold text-gray-900">Tarifs</a>
+      <a href="{% url 'pages:activer_licence' %}" class="block text-sm font-semibold text-gray-900">Activation</a>
+      <a href="{% url 'pages:contact' %}" class="block text-sm font-semibold text-gray-900">Contact</a>
+      <a href="#" class="block text-sm font-semibold text-indigo-600">Se connecter</a>
+    </nav>
+  </div>
+</header>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="py-10">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {% block content %}
+        {% endblock %}
+    </div>
+</main>
+
+<footer class="bg-gray-900 text-white py-8 mt-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+        
+
+      <!-- Réseaux sociaux -->
+      <div class="flex space-x-6">
+        <a href="https://instagram.com/tonprofil" target="_blank" class="hover:text-pink-400" aria-label="Instagram">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm9.5 2.25a.75.75 0 0 1 1.5 0v.25a.75.75 0 0 1-1.5 0v-.25ZM12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7Z"/>
+          </svg>
+        </a>
+
+        <a href="https://wa.me/67575550" target="_blank" class="hover:text-green-400" aria-label="WhatsApp">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 0C5.372 0 0 5.372 0 12c0 2.11.547 4.095 1.5 5.82L0 24l6.33-1.65A11.963 11.963 0 0 0 12 24c6.628 0 12-5.372 12-12S18.628 0 12 0Zm0 21.5a9.48 9.48 0 0 1-4.82-1.32l-.34-.2l-3.75.98l1-3.65l-.22-.36A9.49 9.49 0 1 1 12 21.5Zm5.4-6.1c-.3-.15-1.77-.87-2.04-.97c-.27-.1-.47-.15-.66.15s-.75.97-.91 1.17c-.17.2-.34.22-.63.07a7.73 7.73 0 0 1-2.27-1.4a8.45 8.45 0 0 1-1.56-1.93c-.17-.3-.02-.46.13-.61c.13-.13.3-.34.45-.5c.15-.17.2-.3.3-.5c.1-.2.05-.37 0-.52c-.05-.15-.66-1.6-.91-2.18c-.24-.58-.49-.5-.66-.5c-.17 0-.36-.02-.55-.02s-.5.07-.76.37c-.26.3-1 1-.93 2.43c.07 1.44 1.04 2.83 1.18 3.03c.15.2 2.05 3.13 4.95 4.2c.69.3 1.22.48 1.64.61c.69.22 1.31.19 1.8.12c.55-.08 1.77-.72 2.02-1.42c.25-.7.25-1.3.18-1.43c-.08-.13-.27-.2-.57-.34Z"/>
+          </svg>
+        </a>
+
+        <a href="https://www.linkedin.com/in/2iem-security-588713373/" target="_blank" class="hover:text-blue-400" aria-label="LinkedIn">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M19 0h-14a5 5 0 0 0 -5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5 -5v-14a5 5 0 0 0 -5 -5zm-11 19h-3v-9h3zm-1.5-10.29a1.71 1.71 0 1 1 0 -3.42a1.71 1.71 0 0 1 0 3.42zm13.5 10.29h-3v-4.5c0-2.7-3-2.5-3 0v4.5h-3v-9h3v1.3c1.4-2.6 6-2.8 6 2.5z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="mt-6 text-center text-xs text-gray-400">
+      2025 2IEM_Security
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

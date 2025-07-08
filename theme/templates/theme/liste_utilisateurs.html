@@ -1,0 +1,378 @@
+{% extends './base.html' %}
+{% load static %}
+{% block title %}Utilisateurs | 2IEM_Security{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-white">
+    <!-- En-tête avec gradient professionnel -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold text-white flex items-center">
+                        👥 Gestion des Utilisateurs
+                    </h1>
+                    <p class="text-indigo-100 mt-2">Administration et surveillance des comptes utilisateurs</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4">
+                    <div class="text-white text-center">
+                        <div class="text-3xl font-bold">{{ utilisateurs.count|default:0 }}</div>
+                        <div class="text-sm text-indigo-100">Utilisateurs actifs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Statistiques des utilisateurs -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6 border border-red-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-red-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-red-600">Administrateurs</p>
+                        <p class="text-2xl font-bold text-red-900">{{ admin_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-amber-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-amber-600">Agents</p>
+                        <p class="text-2xl font-bold text-amber-900">{{ agent_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 border border-emerald-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-emerald-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-emerald-600">Utilisateurs Actifs</p>
+                        <p class="text-2xl font-bold text-emerald-900">{{ active_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-slate-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-slate-600">Comptes Inactifs</p>
+                        <p class="text-2xl font-bold text-slate-900">{{ inactive_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres et recherche -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                    </svg>
+                    Recherche et Filtres
+                </h3>
+<!--                <div class="flex items-center space-x-4">-->
+<!--                    <button onclick="exportUsers()"-->
+<!--                            class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all">-->
+<!--                        📊 Exporter-->
+<!--                    </button>-->
+<!--                    <button onclick="addUser()"-->
+<!--                            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all">-->
+<!--                        ➕ Nouvel utilisateur-->
+<!--                    </button>-->
+<!--                </div>-->
+            </div>
+
+            <form method="get" class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher un utilisateur</label>
+                        <input type="text" name="search" value="{{ request.GET.search }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                               placeholder="Nom, email ou username...">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Filtrer par rôle</label>
+                        <select name="role" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                            <option value="">-- Tous les rôles --</option>
+                            <option value="admin" {% if request.GET.role == "admin" %}selected{% endif %}>👑 Administrateur</option>
+                            <option value="agent" {% if request.GET.role == "agent" %}selected{% endif %}>🛡️ Agent</option>
+                            <option value="user" {% if request.GET.role == "user" %}selected{% endif %}>👤 Utilisateur</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Statut du compte</label>
+                        <select name="status" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                            <option value="">-- Tous les statuts --</option>
+                            <option value="active" {% if request.GET.status == "active" %}selected{% endif %}>✅ Actif</option>
+                            <option value="inactive" {% if request.GET.status == "inactive" %}selected{% endif %}>❌ Inactif</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-6 space-x-4">
+                    <a href="{% url 'theme:liste_utilisateurs' %}" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all">
+                        🔄 Réinitialiser
+                    </a>
+                    <button type="submit" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg">
+                        🔍 Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Liste des utilisateurs -->
+        {% if utilisateurs %}
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-700 px-6 py-4">
+                <h3 class="text-xl font-bold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Liste des Utilisateurs ({{ utilisateurs.count }})
+                </h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <div class="max-h-[600px] overflow-y-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-slate-50 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">👤 Utilisateur</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">📧 Contact</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">🎭 Rôle</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">📅 Inscription</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">🔄 Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for user in utilisateurs %}
+                            <tr class="hover:bg-indigo-50 transition-all duration-200 border-l-4 border-indigo-400">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-12 w-12">
+                                            {% if user.avatar %}
+                                                <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.username }}"
+                                                     class="h-12 w-12 rounded-full object-cover border-2 border-indigo-200 shadow-lg">
+                                            {% else %}
+                                                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center border-2 border-indigo-200 shadow-lg">
+                                                    <span class="text-white font-bold text-lg">{{ user.username|first|upper }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-bold text-gray-900">{{ user.username }}</div>
+                                            <div class="text-sm text-gray-500">
+                                                {% if user.first_name or user.last_name %}
+                                                    {{ user.first_name }} {{ user.last_name }}
+                                                {% else %}
+                                                    Nom complet non renseigné
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ user.email }}</div>
+                                    <div class="text-sm text-gray-500">
+                                        {% if user.last_login %}
+                                            Dernière connexion: {{ user.last_login|date:"d/m/Y H:i" }}
+                                        {% else %}
+                                            Jamais connecté
+                                        {% endif %}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if user.role == 'admin' %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-200">
+                                            👑 Administrateur
+                                        </span>
+                                    {% elif user.role == 'agent' %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800 border border-amber-200">
+                                            🛡️ Agent
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                                            👤 {{ user.role|title|default:"Utilisateur" }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <div class="flex flex-col">
+                                        <span class="font-medium">{{ user.date_joined|date:"d/m/Y" }}</span>
+                                        <span class="text-gray-500">{{ user.date_joined|date:"H:i" }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if user.is_active %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                            ✅ Actif
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-200">
+                                            ❌ Inactif
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <!-- Message si aucun utilisateur -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun utilisateur trouvé</h3>
+            <p class="text-gray-500 mb-6">Il n'y a actuellement aucun utilisateur correspondant à vos critères de recherche.</p>
+            <button onclick="addUser()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all">
+                ➕ Créer le premier utilisateur
+            </button>
+        </div>
+        {% endif %}
+
+        <!-- Informations sur la gestion des utilisateurs -->
+        <div class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                Gestion des Utilisateurs 2IEM Security
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
+                <div>
+                    <h5 class="font-semibold text-indigo-800 mb-2">👑 Rôles disponibles</h5>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Administrateur</strong> - Accès complet au système</li>
+                        <li><strong>Agent</strong> - Gestion de la sécurité et monitoring</li>
+                        <li><strong>Utilisateur</strong> - Accès limité aux fonctionnalités</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold text-indigo-800 mb-2">🔒 Sécurité des comptes</h5>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Authentification sécurisée requise</li>
+                        <li>Suivi des connexions et activités</li>
+                        <li>Gestion des permissions par rôle</li>
+                        <li>Désactivation possible des comptes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Fonctions JavaScript pour les actions
+function exportUsers() {
+    // Logique d'export des utilisateurs
+    showToast('📊 Export des utilisateurs en cours...');
+    // Ici vous pouvez ajouter la logique d'export
+}
+
+function addUser() {
+    // Redirection vers la page d'ajout d'utilisateur
+    showToast('➕ Redirection vers la création d\'utilisateur...');
+    // window.location.href = '/admin/add-user/';
+}
+
+// Toast notifications
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.innerHTML = message;
+    toast.className = 'fixed bottom-4 right-4 bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('translate-y-full', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+// Auto-refresh des statistiques
+setInterval(function() {
+    // Ici vous pouvez ajouter une logique de mise à jour des stats
+}, 30000);
+</script>
+
+<style>
+/* Animations personnalisées */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slideIn {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Scrollbar personnalisée */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #6366f1;
+    border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #4f46e5;
+}
+
+/* Effet de survol pour les lignes */
+tbody tr:hover {
+    background-color: #eef2ff !important;
+    transform: translateX(2px);
+}
+
+/* Animation pour les nouveaux utilisateurs */
+@keyframes newUser {
+    0% { background-color: #eef2ff; }
+    50% { background-color: #e0e7ff; }
+    100% { background-color: transparent; }
+}
+
+.new-user {
+    animation: newUser 2s ease-in-out;
+}
+</style>
+{% endblock %}

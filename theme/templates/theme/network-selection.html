@@ -1,0 +1,894 @@
+{% load tailwind_tags %}
+{% load static %}
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Choisissez votre réseau </title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    {% tailwind_css %}
+</head>
+<body>
+<!-- Navbar fixe -->
+<header class="fixed top-0 left-0 right-0 bg-white shadow-sm px-4 py-3 flex justify-between items-center z-50 border-b border-gray-200">
+    <div class="flex items-center gap-4">
+        <!-- Logo et titre -->
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-600 via-green-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-xl">
+                <img src="{% static 'images/theme/logo-final.jpg' %}" alt="2IEM" class="w-24 h-11 rounded-full object-cover">
+            </div>
+            <a href="#" class="text-xl font-bold text-blue-700 hover:text-blue-800 transition-colors">
+                2IEM_SECURITY
+            </a>
+        </div>
+    </div>
+    <!-- Informations utilisateur -->
+    <div class="text-sm text-gray-600 hidden md:block">
+        {% if user.is_authenticated %}
+            <span class="font-medium">{{ user.username }}</span>
+            <span class="text-gray-400 mx-1">•</span>
+            <span class="capitalize">{{ user.role|title }}</span>
+        {% else %}
+            <span>Non connecté</span>
+        {% endif %}
+    </div>
+</header>
+
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+  <!-- Animated Background Pattern -->
+  <div class="absolute inset-0 opacity-30">
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%234f46e5" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+  </div>
+
+  <!-- Hero Header -->
+  <div class="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+
+    <!-- Floating Elements -->
+    <div class="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-bounce opacity-20"></div>
+    <div class="absolute top-32 right-20 w-16 h-16 bg-white/10 rounded-full animate-pulse opacity-30"></div>
+    <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-white/10 rounded-full animate-ping opacity-25"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="text-center">
+        <!-- Logo with Glow Effect -->
+        <div class="relative inline-block mb-8">
+          <div class="w-24 h-24 bg-gradient-to-r from-white/20 to-white/30 rounded-full flex items-center justify-center backdrop-blur-sm shadow-2xl animate-pulse-slow border border-white/20">
+            <svg class="w-12 h-12 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 717.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+            </svg>
+          </div>
+          <div class="absolute inset-0 w-24 h-24 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-ping opacity-20"></div>
+          <div class="absolute -inset-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-xl opacity-30 animate-pulse"></div>
+        </div>
+
+        <!-- Enhanced Title -->
+        <h1 class="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent leading-tight drop-shadow-sm">
+          🛡️ Centre de Sécurité WiFi
+          <span class="block text-4xl md:text-5xl mt-2 font-bold">2IEM Security</span>
+        </h1>
+
+        <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed drop-shadow-sm">
+          Découvrez, analysez et sécurisez votre environnement réseau avec notre technologie de pointe
+        </p>
+
+        <!-- Enhanced Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <button id="scanBtn" class="group relative inline-flex items-center px-12 py-5 bg-white text-blue-600 font-bold text-lg rounded-full hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <svg class="w-6 h-6 mr-3 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span class="relative z-10">Analyser les Réseaux</span>
+          </button>
+
+          <div class="text-blue-100 text-lg font-medium">
+            <span id="lastScan" class="bg-white/10 px-6 py-3 rounded-full backdrop-blur-sm border border-white/20 shadow-lg">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Aucun scan effectué
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages Django -->
+  {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      {% for message in messages %}
+        <div class="mb-4 p-4 rounded-2xl backdrop-blur-md border {% if message.tags == 'success' %}bg-green-500/10 border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-500/10 border-red-200 text-red-800{% else %}bg-blue-500/10 border-blue-200 text-blue-800{% endif %} animate-slide-down shadow-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {% if message.tags == 'success' %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              {% elif message.tags == 'error' %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              {% else %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              {% endif %}
+            </svg>
+            {{ message }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Enhanced Statistics -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-16">
+      <!-- Secure Networks -->
+      <div class="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl hover:bg-white/90 transition-all duration-500 transform hover:-translate-y-3 hover:scale-105">
+        <div class="flex items-center">
+          <div class="relative">
+            <div class="p-4 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+            <div class="absolute -inset-2 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+          </div>
+          <div class="ml-6">
+            <p class="text-sm font-bold text-gray-600 uppercase tracking-wider">Réseaux Sécurisés</p>
+            <p class="text-4xl font-black text-gray-900 group-hover:text-green-600 transition-colors duration-300" id="secureCount">0</p>
+            <p class="text-xs text-gray-500 mt-1">Protection active</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Networks -->
+      <div class="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl hover:bg-white/90 transition-all duration-500 transform hover:-translate-y-3 hover:scale-105">
+        <div class="flex items-center">
+          <div class="relative">
+            <div class="p-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+            <div class="absolute -inset-2 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+          </div>
+          <div class="ml-6">
+            <p class="text-sm font-bold text-gray-600 uppercase tracking-wider">Réseaux Ouverts</p>
+            <p class="text-4xl font-black text-gray-900 group-hover:text-orange-600 transition-colors duration-300" id="openCount">0</p>
+            <p class="text-xs text-gray-500 mt-1">Risque de sécurité</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Networks -->
+      <div class="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl hover:bg-white/90 transition-all duration-500 transform hover:-translate-y-3 hover:scale-105">
+        <div class="flex items-center">
+          <div class="relative">
+            <div class="p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 717.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+              </svg>
+            </div>
+            <div class="absolute -inset-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+          </div>
+          <div class="ml-6">
+            <p class="text-sm font-bold text-gray-600 uppercase tracking-wider">Total Détectés</p>
+            <p class="text-4xl font-black text-gray-900 group-hover:text-blue-600 transition-colors duration-300" id="totalCount">0</p>
+            <p class="text-xs text-gray-500 mt-1">Réseaux disponibles</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strong Signal -->
+      <div class="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl hover:bg-white/90 transition-all duration-500 transform hover:-translate-y-3 hover:scale-105">
+        <div class="flex items-center">
+          <div class="relative">
+            <div class="p-4 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <div class="absolute -inset-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+          </div>
+          <div class="ml-6">
+            <p class="text-sm font-bold text-gray-600 uppercase tracking-wider">Signal Excellent</p>
+            <p class="text-4xl font-black text-gray-900 group-hover:text-purple-600 transition-colors duration-300" id="strongCount">0</p>
+            <p class="text-xs text-gray-500 mt-1">Connexion optimale</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Scanning Indicator -->
+    <div id="scanningIndicator" class="hidden mb-12">
+      <div class="relative bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 rounded-3xl p-12 shadow-2xl border border-blue-100 text-center overflow-hidden">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 animate-pulse"></div>
+
+        <div class="relative z-10">
+          <div class="inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mb-8 shadow-2xl animate-pulse-slow">
+            <svg class="w-14 h-14 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-900 mb-4">🔍 Analyse Intelligente en Cours</h3>
+          <p class="text-xl text-gray-600 mb-8">Détection avancée des réseaux WiFi dans votre environnement</p>
+
+          <!-- Enhanced Progress Bar -->
+          <div class="max-w-md mx-auto">
+            <div class="bg-white rounded-full h-4 shadow-inner border border-gray-200">
+              <div class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-4 rounded-full animate-progress shadow-lg"></div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Analyse des fréquences et protocoles de sécurité...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Controls -->
+    <div class="flex flex-col lg:flex-row items-center justify-between mb-12 gap-6">
+      <div>
+        <h2 class="text-4xl font-bold text-gray-900 mb-2">🌐 Réseaux Détectés</h2>
+        <p class="text-lg text-gray-600">Sélectionnez un réseau pour établir une connexion sécurisée</p>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <select id="sortFilter" class="px-6 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl">
+          <option value="signal">📶 Trier par Signal</option>
+          <option value="name">📝 Trier par Nom</option>
+          <option value="security">🔒 Trier par Sécurité</option>
+          <option value="channel">📡 Trier par Canal</option>
+        </select>
+
+        <button id="refreshBtn" class="group px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+          <svg class="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Enhanced Networks Grid -->
+    <div id="networksList" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+      <!-- Networks will be populated here -->
+    </div>
+
+    <!-- Enhanced No Networks Message -->
+    <div id="noNetworks" class="hidden text-center py-20">
+      <div class="relative inline-block mb-8">
+        <div class="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center shadow-2xl">
+          <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 717.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+          </svg>
+        </div>
+        <div class="absolute -inset-4 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full blur-xl opacity-30 animate-pulse"></div>
+      </div>
+      <h3 class="text-3xl font-bold text-gray-900 mb-4">🔍 Aucun Réseau Détecté</h3>
+      <p class="text-xl text-gray-600 mb-8 max-w-md mx-auto">Lancez une analyse pour découvrir les réseaux WiFi disponibles dans votre environnement</p>
+      <button onclick="scanNetworks()" class="group px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-bold text-lg">
+        <svg class="w-6 h-6 inline mr-3 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        🚀 Lancer l'Analyse
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Ultra Modern Connection Modal -->
+<div id="connectionModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl max-w-lg w-full transform transition-all duration-500 border border-white/50">
+    <div class="p-8">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900">Connexion Sécurisée</h3>
+        </div>
+        <button id="closeModal" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Network Info Card -->
+      <div class="mb-8">
+        <div class="relative overflow-hidden bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 rounded-2xl border border-blue-100 p-6">
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
+          <div class="relative flex items-center space-x-4">
+            <div class="flex-shrink-0">
+              <div class="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 717.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1">
+              <p class="text-lg font-bold text-gray-900" id="selectedNetworkName">Nom du réseau</p>
+              <p class="text-sm text-gray-600" id="selectedNetworkSecurity">Type de sécurité</p>
+              <div class="flex items-center mt-2 space-x-4 text-xs text-gray-500">
+                <span id="selectedNetworkChannel">Canal: --</span>
+                <span id="selectedNetworkSignal">Signal: --%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection Form -->
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <input type="hidden" name="ssid" id="selectedSSID">
+
+        <div id="passwordSection">
+          <label for="password" class="block text-sm font-bold text-gray-700 mb-3">🔐 Mot de passe du réseau</label>
+          <div class="relative">
+            <input type="password" id="password" name="password"
+                   class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 text-lg bg-white/80 backdrop-blur-sm"
+                   placeholder="Entrez le mot de passe WiFi">
+            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-all duration-300">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">Votre mot de passe sera chiffré et sécurisé</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-4 pt-6">
+          <button type="button" id="cancelConnection" class="flex-1 px-6 py-4 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 font-semibold">
+            Annuler
+          </button>
+          <button type="submit" id="connectBtn" class="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+            Se Connecter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced Toast Container -->
+<div id="toastContainer" class="fixed top-6 right-6 z-50 space-y-4"></div>
+
+<!-- Custom Styles -->
+<style>
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes progress {
+    0% { width: 0%; }
+    50% { width: 60%; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-slide-down { animation: slide-down 0.5s ease-out; }
+  .animate-progress { animation: progress 3s ease-in-out infinite; }
+  .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+  .animate-float { animation: float 3s ease-in-out infinite; }
+
+  .network-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+// Enhanced Global Variables
+let networks = [];
+let selectedNetwork = null;
+let isScanning = false;
+let sortOrder = 'signal';
+
+// Enhanced CSRF Token Function
+function getCSRFToken() {
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'csrftoken') {
+      return value;
+    }
+  }
+  return '';
+}
+
+// Enhanced Security Icon Function
+function getSecurityIcon(security) {
+  const isOpen = security === 'Open' || security === 'None' || !security;
+
+  if (isOpen) {
+    return `<div class="relative">
+              <div class="p-3 bg-gradient-to-br from-red-400 to-red-600 rounded-xl shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                <span class="text-white text-xs">!</span>
+              </div>
+            </div>`;
+  } else {
+    return `<div class="p-3 bg-gradient-to-br from-green-400 to-green-600 rounded-xl shadow-lg">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>`;
+  }
+}
+
+// Enhanced Signal Bars Function
+function getSignalBars(signal) {
+  const level = Math.min(4, Math.max(1, Math.ceil(signal / 25)));
+  const colors = ['text-red-500', 'text-orange-500', 'text-yellow-500', 'text-green-500'];
+  const color = colors[level - 1];
+
+  let bars = '';
+  for (let i = 1; i <= 4; i++) {
+    const opacity = i <= level ? 'opacity-100' : 'opacity-30';
+    const height = i * 3 + 4;
+    bars += `<div class="w-1.5 bg-current ${opacity} rounded-full transition-all duration-300" style="height: ${height}px;"></div>`;
+  }
+
+  return `<div class="flex items-end space-x-1 ${color}">${bars}</div>`;
+}
+
+// Enhanced Scan Networks Function
+async function scanNetworks() {
+  if (isScanning) return;
+
+  isScanning = true;
+  console.log('🔍 Début du scan des réseaux...');
+
+  const scanBtn = document.getElementById('scanBtn');
+  const scanningIndicator = document.getElementById('scanningIndicator');
+  const networksList = document.getElementById('networksList');
+  const noNetworks = document.getElementById('noNetworks');
+
+  // Show scanning state
+  scanningIndicator.classList.remove('hidden');
+  networksList.innerHTML = '';
+  noNetworks.classList.add('hidden');
+
+  // Update button state
+  const originalBtnContent = scanBtn.innerHTML;
+  scanBtn.innerHTML = `
+    <svg class="w-6 h-6 mr-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+    </svg>
+    <span class="relative z-10">Analyse en cours...</span>
+  `;
+  scanBtn.disabled = true;
+
+  try {
+    const response = await fetch(window.location.href, {
+      method: 'GET',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': getCSRFToken()
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.status === 'success' && data.networks) {
+      networks = data.networks;
+      console.log(`${networks.length} réseaux détectés`);
+
+      scanningIndicator.classList.add('hidden');
+      displayNetworks();
+
+      // Update last scan time
+      const now = new Date();
+      document.getElementById('lastScan').innerHTML = `
+        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Dernier scan: ${now.toLocaleTimeString()}
+      `;
+
+      showToast(`🎉 ${networks.length} réseaux détectés avec succès!`, 'success');
+
+    } else {
+      throw new Error(data.error || 'Aucun réseau trouvé');
+    }
+
+  } catch (error) {
+    console.error('❌ Erreur lors du scan:', error);
+    scanningIndicator.classList.add('hidden');
+    showToast(`❌ Erreur: ${error.message}`, 'error');
+    noNetworks.classList.remove('hidden');
+
+  } finally {
+    scanBtn.innerHTML = originalBtnContent;
+    scanBtn.disabled = false;
+    isScanning = false;
+  }
+}
+
+// Enhanced Display Networks Function
+function displayNetworks(networksToShow = networks) {
+  const networksList = document.getElementById('networksList');
+  const noNetworks = document.getElementById('noNetworks');
+
+  if (networksToShow.length === 0) {
+    networksList.innerHTML = '';
+    noNetworks.classList.remove('hidden');
+    return;
+  }
+
+  noNetworks.classList.add('hidden');
+
+  networksList.innerHTML = networksToShow.map((network, index) => {
+    const isOpen = network.security === 'Open' || network.security === 'None' || !network.security;
+    const signalLevel = Math.min(100, Math.max(0, network.signal || 50));
+    const signalColor = signalLevel >= 75 ? 'text-green-600' : signalLevel >= 50 ? 'text-yellow-600' : 'text-red-600';
+
+    return `
+      <div class="network-card group bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl hover:bg-white hover:border-blue-200 cursor-pointer transform transition-all duration-500 hover:-translate-y-2 hover:scale-105"
+           data-network='${JSON.stringify(network)}'
+           style="animation-delay: ${index * 0.1}s">
+
+        <!-- Network Header -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center space-x-4">
+            ${getSignalBars(signalLevel)}
+            <div>
+              <h3 class="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300">${network.name || 'Réseau inconnu'}</h3>
+              ${network.connected ?
+                '<span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full mt-1 border border-green-200">🟢 Connecté</span>' :
+                ''}
+            </div>
+          </div>
+          ${getSecurityIcon(network.security)}
+        </div>
+
+        <!-- Signal Strength -->
+        <div class="space-y-4 mb-6">
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-semibold text-gray-600">💪 Force du signal</span>
+            <span class="text-sm font-bold ${signalColor}">${signalLevel}%</span>
+          </div>
+
+          <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
+            <div class="bg-gradient-to-r ${signalLevel >= 75 ? 'from-green-400 to-green-600' :
+                                           signalLevel >= 50 ? 'from-yellow-400 to-yellow-600' :
+                                           signalLevel >= 25 ? 'from-orange-400 to-orange-600' :
+                                           'from-red-400 to-red-600'} h-3 rounded-full transition-all duration-1000 shadow-sm"
+                 style="width: ${signalLevel}%"></div>
+          </div>
+
+          <!-- Network Details Grid -->
+          <div class="grid grid-cols-2 gap-4 text-sm bg-gray-50/50 rounded-xl p-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 font-medium">🔒 Sécurité:</span>
+              <span class="font-bold ${isOpen ? 'text-red-600' : 'text-green-600'}">${network.security || 'Inconnue'}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 font-medium">📡 Canal:</span>
+              <span class="font-bold text-gray-900">${network.channel || 'N/A'}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 font-medium">⚡ Fréquence:</span>
+              <span class="font-bold text-gray-900">${network.frequency || 'N/A'}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 font-medium">📊 État:</span>
+              <span class="font-bold ${network.connected ? 'text-green-600' : 'text-blue-600'}">${network.connected ? 'Connecté' : 'Disponible'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <button class="w-full py-4 px-6 ${network.connected ?
+          'bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800' :
+          isOpen ?
+            'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700' :
+            'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'}
+          text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-bold text-lg group-hover:shadow-2xl">
+          ${network.connected ?
+            'Accéder au Dashboard' :
+            isOpen ?
+              '🔓 Connexion Rapide (Réseau Ouvert)' :
+              '🔐 Saisir le Mot de Passe'}
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  // Add event listeners with staggered animation
+  document.querySelectorAll('.network-card').forEach((card, index) => {
+    card.style.animationDelay = `${index * 0.1}s`;
+    card.addEventListener('click', function() {
+      const networkData = JSON.parse(this.dataset.network);
+      selectNetwork(networkData);
+    });
+  });
+
+  updateStats(networksToShow);
+}
+
+// Enhanced Select Network Function
+function selectNetwork(network) {
+  selectedNetwork = network;
+  console.log('🎯 Réseau sélectionné:', network);
+
+  if (network.connected) {
+    showToast('Redirection vers le dashboard...', 'success');
+    setTimeout(() => {
+      window.location.href = '/systeme/dashboard/';
+    }, 1500);
+    return;
+  }
+
+  const isOpen = network.security === 'Open' || network.security === 'None' || !network.security;
+  const modal = document.getElementById('connectionModal');
+  const passwordSection = document.getElementById('passwordSection');
+
+  // Populate modal with network info
+  document.getElementById('selectedNetworkName').textContent = network.name;
+  document.getElementById('selectedNetworkSecurity').textContent = network.security || 'Sécurisé';
+  document.getElementById('selectedNetworkChannel').textContent = `Canal: ${network.channel || 'N/A'}`;
+  document.getElementById('selectedNetworkSignal').textContent = `Signal: ${network.signal || 0}%`;
+  document.getElementById('selectedSSID').value = network.name;
+
+  if (isOpen) {
+    passwordSection.style.display = 'none';
+    // Auto-connect for open networks
+    connectToNetwork(network, '');
+  } else {
+    passwordSection.style.display = 'block';
+    modal.classList.remove('hidden');
+    setTimeout(() => document.getElementById('password').focus(), 300);
+  }
+}
+
+// Enhanced Connect to Network Function
+async function connectToNetwork(network, password) {
+  console.log(`🔗 Tentative de connexion à ${network.name}...`);
+
+  const connectBtn = document.getElementById('connectBtn');
+  const originalText = connectBtn.innerHTML;
+
+  connectBtn.innerHTML = `
+    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    🔄 Connexion en cours...
+  `;
+  connectBtn.disabled = true;
+
+  try {
+    // Simulate connection process
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    showToast(`Connexion réussie au réseau ${network.name}!`, 'success');
+    closeModal();
+
+    setTimeout(() => {
+      console.log('Redirection vers le dashboard...');
+      window.location.href = '/systeme/dashboard/';
+    }, 2000);
+
+  } catch (error) {
+    console.error('❌ Erreur de connexion:', error);
+    showToast(`❌ ${error.message}`, 'error');
+    connectBtn.innerHTML = originalText;
+    connectBtn.disabled = false;
+  }
+}
+
+// Enhanced Update Stats Function
+function updateStats(networksToShow = networks) {
+  const secureCount = networksToShow.filter(n =>
+    n.security && n.security !== 'Open' && n.security !== 'None'
+  ).length;
+  const openCount = networksToShow.filter(n =>
+    !n.security || n.security === 'Open' || n.security === 'None'
+  ).length;
+  const strongCount = networksToShow.filter(n => (n.signal || 0) >= 75).length;
+
+  // Animate numbers
+  animateNumber('secureCount', secureCount);
+  animateNumber('openCount', openCount);
+  animateNumber('totalCount', networksToShow.length);
+  animateNumber('strongCount', strongCount);
+}
+
+// Number Animation Function
+function animateNumber(elementId, targetValue) {
+  const element = document.getElementById(elementId);
+  const startValue = parseInt(element.textContent) || 0;
+  const duration = 1000;
+  const startTime = performance.now();
+
+  function updateNumber(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+
+    element.textContent = currentValue;
+
+    if (progress < 1) {
+      requestAnimationFrame(updateNumber);
+    }
+  }
+
+  requestAnimationFrame(updateNumber);
+}
+
+// Enhanced Close Modal Function
+function closeModal() {
+  document.getElementById('connectionModal').classList.add('hidden');
+  document.getElementById('password').value = '';
+  selectedNetwork = null;
+}
+
+// Enhanced Toast Function
+function showToast(message, type = 'info') {
+  const toastContainer = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+
+  const colors = {
+    success: 'bg-gradient-to-r from-green-500 to-emerald-600',
+    error: 'bg-gradient-to-r from-red-500 to-red-600',
+    warning: 'bg-gradient-to-r from-yellow-500 to-orange-500',
+    info: 'bg-gradient-to-r from-blue-500 to-indigo-600'
+  };
+
+  const icons = {
+    success: '✅',
+    error: '❌',
+    warning: '⚠️',
+    info: 'ℹ️'
+  };
+
+  toast.className = `${colors[type]} text-white px-6 py-4 rounded-2xl shadow-2xl transform transition-all duration-500 translate-x-full backdrop-blur-sm border border-white/20`;
+  toast.innerHTML = `
+    <div class="flex items-center">
+      <span class="text-xl mr-3">${icons[type]}</span>
+      <span class="font-semibold">${message}</span>
+    </div>
+  `;
+
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove('translate-x-full');
+  }, 100);
+
+  setTimeout(() => {
+    toast.classList.add('translate-x-full');
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 500);
+  }, 5000);
+}
+
+// Sort Networks Function
+function sortNetworks(criteria) {
+  let sortedNetworks = [...networks];
+
+  switch(criteria) {
+    case 'signal':
+      sortedNetworks.sort((a, b) => (b.signal || 0) - (a.signal || 0));
+      break;
+    case 'name':
+      sortedNetworks.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      break;
+    case 'security':
+      sortedNetworks.sort((a, b) => {
+        const aOpen = !a.security || a.security === 'Open' || a.security === 'None';
+        const bOpen = !b.security || b.security === 'Open' || b.security === 'None';
+        if (aOpen && !bOpen) return 1;
+        if (!aOpen && bOpen) return -1;
+        return (a.security || '').localeCompare(b.security || '');
+      });
+      break;
+    case 'channel':
+      sortedNetworks.sort((a, b) => (a.channel || 0) - (b.channel || 0));
+      break;
+  }
+
+  return sortedNetworks;
+}
+
+// Enhanced Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 Initialisation de l\'interface WiFi ultra-moderne...');
+
+  // Scan buttons
+  document.getElementById('scanBtn').addEventListener('click', scanNetworks);
+  document.getElementById('refreshBtn').addEventListener('click', scanNetworks);
+
+  // Modal controls
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('cancelConnection').addEventListener('click', closeModal);
+
+  // Connection form
+  document.querySelector('#connectionModal form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const password = document.getElementById('password').value;
+    if (selectedNetwork) {
+      connectToNetwork(selectedNetwork, password);
+    }
+  });
+
+  // Password toggle
+  document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordField = document.getElementById('password');
+    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordField.setAttribute('type', type);
+
+    // Update icon
+    this.innerHTML = type === 'password' ?
+      `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+      </svg>` :
+      `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+      </svg>`;
+  });
+
+  // Sort filter
+  document.getElementById('sortFilter').addEventListener('change', function() {
+    const sortBy = this.value;
+    const sortedNetworks = sortNetworks(sortBy);
+    displayNetworks(sortedNetworks);
+    showToast(`Réseaux triés par ${sortBy}`, 'info');
+  });
+
+  // Close modal on outside click
+  document.getElementById('connectionModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
+
+  // Auto-scan on load
+  setTimeout(() => {
+    console.log('🔄 Lancement du scan automatique...');
+    scanNetworks();
+  }, 1000);
+
+  // Welcome message
+  showToast('🎉 Interface WiFi chargée avec succès!', 'success');
+});
+</script>
+
+</body>
+</html>

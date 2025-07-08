@@ -1,0 +1,95 @@
+{% extends './base.html' %}
+{% load static %}
+{% block title %}Paramètres du compte | 2IEM_Security{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+  <h2 class="text-center text-2xl font-bold text-gray-800 mb-8">⚙️ Paramètres de l’utilisateur</h2>
+
+  <!-- Bloc Profil -->
+  <div class="bg-white/70 backdrop-blur-md border rounded-xl shadow-lg p-6 mb-8 text-center transition hover:scale-[1.01]">
+    {% if user.avatar %}
+      <img src="{{ user.avatar.url }}" alt="Avatar" class="mx-auto mb-3 w-28 h-28 rounded-full shadow-lg border-4 border-gray-200 object-cover">
+    {% else %}
+      <img src="{% static 'images/pages/logos.jpg' %}" alt="Avatar par défaut" class="mx-auto mb-3 w-28 h-28 rounded-full shadow-lg border-4 border-gray-200 object-cover">
+    {% endif %}
+    <h3 class="text-xl font-semibold text-gray-800">{{ user.username }}</h3>
+    <p class="text-gray-500">{{ user.email }}</p>
+    <span class="inline-block bg-gray-800 text-white px-3 py-1 rounded-full mt-2 text-sm">Connecté</span>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="space-y-8">
+    {% csrf_token %}
+
+    <!-- Bloc Infos -->
+    <div class="bg-white/70 backdrop-blur-md border rounded-xl shadow p-6 transition hover:scale-[1.01]">
+      <h4 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+        👤 Informations de profil
+      </h4>
+      <div class="space-y-4">
+        {{ settings_form.as_p }}
+      </div>
+    </div>
+
+    <!-- Bloc Mot de passe -->
+    <div class="bg-white/70 backdrop-blur-md border rounded-xl shadow p-6 transition hover:scale-[1.01]">
+      <h4 class="text-lg font-semibold text-yellow-600 mb-4 flex items-center gap-2">
+        🔐 Sécurité du compte
+      </h4>
+
+      {% if form.errors %}
+      <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
+        {% for field in form %}
+          {% for error in field.errors %}
+            <p class="text-sm">{{ error }}</p>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          {{ form.old_password.label_tag }} {{ form.old_password }}
+        </div>
+        <div>
+          {{ form.new_password1.label_tag }} {{ form.new_password1 }}
+        </div>
+        <div>
+          {{ form.new_password2.label_tag }} {{ form.new_password2 }}
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-500 mt-4">
+        Votre mot de passe doit contenir au moins 8 caractères, dont une majuscule, un chiffre et un symbole.
+      </p>
+    </div>
+
+    <div class="text-end">
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded shadow">
+        💾 Enregistrer
+      </button>
+    </div>
+  </form>
+
+  <!-- Messages (toasts) -->
+  {% if messages %}
+  <div class="fixed top-5 right-5 z-50 space-y-2">
+    {% for message in messages %}
+    <div class="bg-{{ message.tags }}-100 text-{{ message.tags }}-800 px-4 py-3 rounded shadow transition animate-fade-in">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-in-out;
+  }
+</style>
+{% endblock %}

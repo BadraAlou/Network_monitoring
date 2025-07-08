@@ -1,0 +1,132 @@
+{% extends './base.html' %}
+{% block title %}Acheter – 2IEM Security{% endblock %}
+
+{% block content %}
+
+<style>
+  .version-label-selected {
+    border-width: 3px;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* joli effet */
+  }
+</style>
+
+<!-- NOTIFICATION -->
+{% if messages %}
+  <div class="max-w-4xl mx-auto mt-6">
+    {% for message in messages %}
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+        <strong class="font-bold">Succès : </strong>
+        <span class="block sm:inline">{{ message }}</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- HERO SECTION -->
+<section class="bg-green-300 text-white py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl lg:text-5xl font-bold mb-6">Sécurisez votre infrastructure maintenant</h1>
+    <p class="text-xl lg:text-2xl text-gray-800 max-w-3xl mx-auto">
+      Choisissez votre version 2IEM Security et recevez immédiatement votre clé de licence sécurisée.
+    </p>
+  </div>
+</section>
+
+<!-- FORMULAIRE -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div class="p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Commandez votre licence 2IEM Security</h2>
+
+        {% if erreur %}
+          <div class="bg-red-100 text-red-700 px-4 py-3 mb-6 rounded">{{ erreur }}</div>
+        {% endif %}
+
+        <form method="post" action="{% url 'orders:stripe_checkout' %}" class="space-y-8">
+          {% csrf_token %}
+
+          <!-- CHOIX VERSION -->
+          <fieldset class="space-y-4">
+            <legend class="text-sm font-semibold text-gray-900">Choisissez votre version *</legend>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {% for ver in versions %}
+              <label class="cursor-pointer block p-4 border-2 rounded-lg hover:border-{{ ver.accent }}-500 transition group version-label">
+                <input type="radio" name="version" value="{{ ver.slug }}" class="sr-only version-radio" {% if forloop.first %}checked{% endif %}>
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-{{ ver.accent }}-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4" />
+                    </svg>
+                  </div>
+                  <h3 class="font-bold text-lg mb-2">{{ ver.name }}</h3>
+                  <p class="text-gray-600 text-sm mb-3">{{ ver.desc }}</p>
+                  <p class="text-2xl font-bold text-{{ ver.accent }}-600">{{ ver.price }} FCFA</p>
+                  {% if ver.popular %}
+                  <span class="inline-block bg-{{ ver.accent }}-100 text-{{ ver.accent }}-800 text-xs px-2 py-1 rounded mt-2"></span>
+                  {% endif %}
+                </div>
+              </label>
+              {% endfor %}
+            </div>
+          </fieldset>
+
+          <!-- INFOS CLIENT -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-900 mb-2">Nom complet *</label>
+              <input type="text" name="nom" required class="w-full px-4 py-3 border-gray-300 rounded-lg" placeholder="Votre nom complet">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-900 mb-2">Entreprise</label>
+              <input type="text" name="entreprise" class="w-full px-4 py-3 border-gray-300 rounded-lg" placeholder="Nom de votre entreprise">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-900 mb-2">Adresse email *</label>
+            <input type="email" name="email" required class="w-full px-4 py-3 border-gray-300 rounded-lg" placeholder="votre@email.com">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-900 mb-2">Téléphone *</label>
+            <input type="tel" name="telephone" required class="w-full px-4 py-3 border-gray-300 rounded-lg" placeholder="+223 XX XX XX XX">
+          </div>
+
+          <!-- BOUTON -->
+          <div class="text-center">
+            <button type="submit" class="bg-indigo-600 text-white px-10 py-3 rounded-lg font-semibold text-lg hover:bg-indigo-700 transition">
+              Procéder au paiement sécurisé
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const labels = document.querySelectorAll(".version-label");
+    const radios = document.querySelectorAll(".version-radio");
+
+    function resetBorders() {
+      labels.forEach(label => label.classList.remove("version-label-selected"));
+    }
+
+    labels.forEach((label, index) => {
+      const input = label.querySelector("input[type=radio]");
+      if (input.checked) {
+        label.classList.add("version-label-selected");
+      }
+
+      label.addEventListener("click", () => {
+        resetBorders();
+        label.classList.add("version-label-selected");
+      });
+    });
+  });
+</script>
+
+
+{% endblock %}

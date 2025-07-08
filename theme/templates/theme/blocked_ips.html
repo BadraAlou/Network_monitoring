@@ -1,0 +1,559 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}IPs Bloquées - 2IEM Security{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black p-6">
+    <!-- En-tête avec statistiques principales -->
+    <div class="mb-8">
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-6 text-white transform hover:scale-105 transition-all duration-300">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <p class="text-blue-100 text-sm font-medium mb-2 uppercase tracking-wide">Gestion des IPs Bloquées</p>
+                    <h1 class="text-4xl font-bold mb-2">{{ total_blocked }} IP(s) bloquée(s)</h1>
+                    <p class="text-blue-200">Système de protection réseau actif</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-full p-4 animate-pulse">
+                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Aujourd'hui -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-300 text-sm font-medium mb-1">Aujourd'hui</p>
+                    <p class="text-3xl font-bold text-white">{{ blocked_today }}</p>
+                </div>
+                <div class="bg-red-500/20 rounded-full p-3 group-hover:bg-red-500/30 transition-colors">
+                    <svg class="w-6 h-6 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cette semaine -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-300 text-sm font-medium mb-1">Cette semaine</p>
+                    <p class="text-3xl font-bold text-white">{{ blocked_this_week }}</p>
+                </div>
+                <div class="bg-yellow-500/20 rounded-full p-3 group-hover:bg-yellow-500/30 transition-colors">
+                    <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statut réseau -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-300 text-sm font-medium mb-1">Statut</p>
+                    <p class="text-lg font-bold text-green-400">Protégé</p>
+                </div>
+                <div class="bg-green-500/20 rounded-full p-3 group-hover:bg-green-500/30 transition-colors">
+                    <div class="w-3 h-3 bg-green-400 rounded-full animate-ping"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dernière activité -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-300 text-sm font-medium mb-1">Dernière activité</p>
+                    <p class="text-sm font-medium text-blue-400" id="lastActivity">En temps réel</p>
+                </div>
+                <div class="bg-blue-500/20 rounded-full p-3 group-hover:bg-blue-500/30 transition-colors">
+                    <svg class="w-6 h-6 text-blue-400 animate-spin" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 mb-8">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+            </svg>
+            Actions Rapides
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Blocage manuel -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-white">Blocage Manuel</h3>
+                <form method="post" action="{% url 'theme:block_ip_manual' %}" class="space-y-4" id="blockForm">
+                    {% csrf_token %}
+                    <div class="space-y-3">
+                        <input type="text"
+                               name="ip_address"
+                               class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                               placeholder="192.168.1.100"
+                               pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
+                               required>
+                        <input type="text"
+                               name="reason"
+                               class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                               placeholder="Raison du blocage"
+                               required>
+                        <button type="submit"
+                                class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Bloquer IP</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Déblocage automatique -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-white">Déblocage Automatique</h3>
+                <form method="post" action="{% url 'theme:auto_unblock_expired' %}" class="space-y-4" id="autoUnblockForm">
+                    {% csrf_token %}
+                    <div class="space-y-3">
+                        <select name="hours"
+                                class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300">
+                            <option value="1" class="bg-gray-800">1 heure</option>
+                            <option value="6" class="bg-gray-800">6 heures</option>
+                            <option value="24" selected class="bg-gray-800">24 heures</option>
+                            <option value="168" class="bg-gray-800">7 jours</option>
+                        </select>
+                        <button type="submit"
+                                class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Débloquer Expirées</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des IPs bloquées -->
+    <div class="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 overflow-hidden">
+        <div class="p-6 border-b border-white/20">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    IPs Bloquées ({{ total_blocked }})
+                </h2>
+                <div class="flex space-x-3">
+                    <button onclick="selectAll()"
+                            class="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 font-medium py-2 px-4 rounded-lg transition-all duration-300 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Tout sélectionner</span>
+                    </button>
+                    <button onclick="unblockSelected()"
+                            class="bg-green-500/20 hover:bg-green-500/30 text-green-400 font-medium py-2 px-4 rounded-lg transition-all duration-300 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zM8 6a2 2 0 114 0v1H8V6z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Débloquer sélectionnées</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <form id="unblockForm" method="post" action="{% url 'theme:unblock_multiple_ips' %}">
+            {% csrf_token %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-white/5">
+                        <tr>
+                            <th class="px-6 py-4 text-left">
+                                <input type="checkbox"
+                                       id="selectAllCheckbox"
+                                       onchange="toggleAll()"
+                                       class="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2">
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">IP Address</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Raison</th>
+                            <th class="px-6 py-4 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Bloquée le</th>
+                            <th class="px-6 py-4 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Durée</th>
+                            <th class="px-6 py-4 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/10">
+                        {% for ip in blocked_ips %}
+                        <tr class="hover:bg-white/5 transition-colors duration-200 group">
+                            <td class="px-6 py-4">
+                                <input type="checkbox"
+                                       name="ip_ids"
+                                       value="{{ ip.id }}"
+                                       class="ip-checkbox w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2">
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-white">{{ ip.ip_address }}</div>
+                                        {% if ip.alert %}
+                                            <div class="text-xs text-gray-400">Alerte #{{ ip.alert.id }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-300 max-w-xs truncate" title="{{ ip.reason }}">
+                                    {{ ip.reason|truncatechars:50 }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="text-sm text-gray-400">
+                                    {{ ip.blocked_on|date:"d/m/Y H:i" }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
+                                    {{ ip.blocked_on|timesince }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <form method="post" action="{% url 'theme:unblock_ip' ip.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            onclick="return confirm('Débloquer {{ ip.ip_address }} et reconnecter au réseau ?')"
+                                            class="bg-green-500/20 hover:bg-green-500/30 text-green-400 font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 mx-auto">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zM8 6a2 2 0 114 0v1H8V6z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span>Débloquer</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center space-y-4">
+                                    <svg class="w-16 h-16 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <h3 class="text-xl font-bold text-white">Aucune IP bloquée</h3>
+                                    <p class="text-gray-400">Votre réseau est sécurisé ! Aucune menace détectée.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <!-- Indicateur de statut en temps réel -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <div class="bg-green-500/20 backdrop-blur-md border border-green-500/30 rounded-full px-4 py-2 flex items-center space-x-2 text-green-400">
+            <div class="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+            <span class="text-sm font-medium">Surveillance active</span>
+        </div>
+    </div>
+</div>
+
+<!-- Toast notifications -->
+<div id="toast-container" class="fixed top-6 right-6 z-50 space-y-2"></div>
+
+<script>
+// Variables globales
+let autoRefreshInterval;
+let lastUpdateTime = new Date();
+
+// Fonctions de gestion des checkboxes
+function toggleAll() {
+    const selectAll = document.getElementById('selectAllCheckbox');
+    const checkboxes = document.querySelectorAll('.ip-checkbox');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+        animateCheckbox(checkbox);
+    });
+}
+
+function selectAll() {
+    const checkboxes = document.querySelectorAll('.ip-checkbox');
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+        animateCheckbox(checkbox);
+    });
+    selectAllCheckbox.checked = true;
+    animateCheckbox(selectAllCheckbox);
+}
+
+function unblockSelected() {
+    const selected = document.querySelectorAll('.ip-checkbox:checked');
+
+    if (selected.length === 0) {
+        showToast('Veuillez sélectionner au moins une IP à débloquer.', 'warning');
+        return;
+    }
+
+    if (confirm(`Débloquer ${selected.length} IP(s) sélectionnée(s) et les reconnecter au réseau ?`)) {
+        showToast(`Déblocage de ${selected.length} IP(s) en cours...`, 'info');
+        document.getElementById('unblockForm').submit();
+    }
+}
+
+// Animation des checkboxes
+function animateCheckbox(checkbox) {
+    checkbox.parentElement.classList.add('transform', 'scale-110');
+    setTimeout(() => {
+        checkbox.parentElement.classList.remove('transform', 'scale-110');
+    }, 150);
+}
+
+// Système de notifications toast
+function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+
+    const colors = {
+        success: 'bg-green-500/20 border-green-500/30 text-green-400',
+        error: 'bg-red-500/20 border-red-500/30 text-red-400',
+        warning: 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400',
+        info: 'bg-blue-500/20 border-blue-500/30 text-blue-400'
+    };
+
+    toast.className = `${colors[type]} backdrop-blur-md border rounded-lg px-4 py-3 shadow-lg transform translate-x-full transition-transform duration-300 max-w-sm`;
+    toast.innerHTML = `
+        <div class="flex items-center space-x-2">
+            <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-sm font-medium">${message}</span>
+        </div>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    // Animation d'entrée
+    setTimeout(() => {
+        toast.classList.remove('translate-x-full');
+    }, 100);
+
+    // Suppression automatique
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => {
+            toastContainer.removeChild(toast);
+        }, 300);
+    }, 5000);
+}
+
+// Validation des formulaires
+document.getElementById('blockForm').addEventListener('submit', function(e) {
+    const ipInput = this.querySelector('input[name="ip_address"]');
+    const reasonInput = this.querySelector('input[name="reason"]');
+
+    if (!isValidIP(ipInput.value)) {
+        e.preventDefault();
+        showToast('Adresse IP invalide. Format attendu: 192.168.1.100', 'error');
+        ipInput.focus();
+        return;
+    }
+
+    if (reasonInput.value.trim().length < 3) {
+        e.preventDefault();
+        showToast('La raison doit contenir au moins 3 caractères.', 'error');
+        reasonInput.focus();
+        return;
+    }
+
+    showToast('Blocage de l\'IP en cours...', 'info');
+});
+
+// Validation IP
+function isValidIP(ip) {
+    const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    return ipRegex.test(ip);
+}
+
+// Mise à jour de l'heure de dernière activité
+function updateLastActivity() {
+    const lastActivityElement = document.getElementById('lastActivity');
+    const now = new Date();
+    const diff = Math.floor((now - lastUpdateTime) / 1000);
+
+    if (diff < 60) {
+        lastActivityElement.textContent = `Il y a ${diff}s`;
+    } else if (diff < 3600) {
+        lastActivityElement.textContent = `Il y a ${Math.floor(diff / 60)}min`;
+    } else {
+        lastActivityElement.textContent = `Il y a ${Math.floor(diff / 3600)}h`;
+    }
+}
+
+// Auto-refresh intelligent
+function startAutoRefresh() {
+    // Mise à jour de l'activité toutes les secondes
+    setInterval(updateLastActivity, 1000);
+
+    // Refresh complet toutes les 30 secondes
+    autoRefreshInterval = setInterval(() => {
+        // Vérifier si l'utilisateur est actif sur la page
+        if (document.visibilityState === 'visible') {
+            showToast('Actualisation des données...', 'info');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+    }, 30000);
+}
+
+// Gestion de la visibilité de la page
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+        // Page visible, reprendre l'auto-refresh
+        if (!autoRefreshInterval) {
+            startAutoRefresh();
+        }
+    } else {
+        // Page cachée, arrêter l'auto-refresh pour économiser les ressources
+        if (autoRefreshInterval) {
+            clearInterval(autoRefreshInterval);
+            autoRefreshInterval = null;
+        }
+    }
+});
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    startAutoRefresh();
+
+    // Animation d'entrée pour les éléments
+    const elements = document.querySelectorAll('[class*="backdrop-blur"]');
+    elements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            el.style.transition = 'all 0.5s ease';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+
+    // Afficher un message de bienvenue
+    setTimeout(() => {
+        showToast('Système de protection réseau 2IEM Security activé', 'success');
+    }, 1000);
+});
+
+// Gestion des erreurs globales
+window.addEventListener('error', function(e) {
+    console.error('Erreur JavaScript:', e.error);
+    showToast('Une erreur est survenue. Actualisation recommandée.', 'error');
+});
+
+// Raccourcis clavier
+document.addEventListener('keydown', function(e) {
+    // Ctrl+A pour tout sélectionner
+    if (e.ctrlKey && e.key === 'a' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        selectAll();
+    }
+
+    // Échap pour désélectionner tout
+    if (e.key === 'Escape') {
+        const checkboxes = document.querySelectorAll('.ip-checkbox');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        checkboxes.forEach(cb => cb.checked = false);
+        selectAllCheckbox.checked = false;
+    }
+
+    // F5 pour actualiser
+    if (e.key === 'F5') {
+        showToast('Actualisation manuelle...', 'info');
+    }
+});
+</script>
+
+<!-- Styles CSS additionnels pour les animations -->
+<style>
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse-slow {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Effet de survol pour les lignes du tableau */
+tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+    transition: all 0.2s ease;
+}
+
+/* Animation pour les boutons */
+button:active {
+    transform: scale(0.95);
+}
+
+/* Effet glassmorphism renforcé */
+.backdrop-blur-md {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+</style>
+{% endblock %}

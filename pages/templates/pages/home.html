@@ -1,0 +1,785 @@
+{% extends './base.html' %}
+{% block title %}Accueil – 2IEM_Security{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION ÉPURÉ -->
+<section class="relative min-h-screen bg-white overflow-hidden">
+  <!-- Subtle Background Pattern -->
+  <div class="absolute inset-0 bg-green-600"></div>
+  <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%236366f1" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-screen">
+      <!-- Contenu Principal -->
+      <div class="space-y-8 fade-in-up">
+        <!-- Badge Subtil -->
+        <div class="inline-flex items-center bg-blue-50 border border-blue-100 rounded-full px-4 py-2 text-blue-700 text-sm font-medium">
+          <svg class="w-4 h-4 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          Solution 100% Malienne
+        </div>
+
+        <!-- Titre Principal -->
+        <div class="space-y-4">
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-tight tracking-tight">
+            Votre bouclier contre les
+            <span class="text-blue-600 block">cybermenaces</span>
+          </h1>
+        </div>
+
+        <!-- Description -->
+        <p class="text-xl text-gray-600 max-w-2xl leading-relaxed">
+          2IEM_Security détecte, bloque et neutralise les attaques DoS, DDoS et autres menaces
+          en temps réel grâce à une technologie modulaire de pointe.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+          <a href="{% url 'pages:acheter' %}"
+             class="group inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+            <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            Acheter maintenant
+          </a>
+
+          <a href="#demo"
+             class="group inline-flex items-center justify-center border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
+            <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-9 5a9 9 0 1118 0H3z"/>
+            </svg>
+            Voir la démo
+          </a>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="flex items-center space-x-8 pt-8">
+          <div class="flex items-center text-sm text-gray-500">
+            <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+            Surveillance 24/24
+          </div>
+          <div class="flex items-center text-sm text-gray-500">
+            <div class="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+            Réaction &lt;1s
+          </div>
+          <div class="flex items-center text-sm text-gray-500">
+            <div class="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+            99.9% Efficacité
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Preview Épuré -->
+      <div class="fade-in-up" style="animation-delay: 0.3s;">
+        <div class="relative">
+          <!-- Main Dashboard -->
+          <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">2IEM Security</h3>
+                    <p class="text-sm text-gray-500">Protection Active</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span class="text-sm font-medium text-gray-700">En ligne</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="p-6">
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-green-50 rounded-xl p-4 border border-green-100">
+                  <div class="text-2xl font-bold text-gray-900 mb-1 counter" data-target="99.9">0</div>
+                  <div class="text-sm text-gray-600">% Détection</div>
+                  <div class="w-full bg-green-100 rounded-full h-2 mt-2">
+                    <div class="bg-green-500 h-2 rounded-full progress-bar" style="width: 0%" data-width="99.9%"></div>
+                  </div>
+                </div>
+
+                <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                  <div class="text-2xl font-bold text-gray-900 mb-1">24/7</div>
+                  <div class="text-sm text-gray-600">Surveillance</div>
+                  <div class="flex items-center mt-2">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+                    <span class="text-xs text-blue-600 font-medium">Active</span>
+                  </div>
+                </div>
+
+                <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                  <div class="text-2xl font-bold text-gray-900 mb-1">&lt;1s</div>
+                  <div class="text-sm text-gray-600">Réaction</div>
+                  <div class="w-full bg-purple-100 rounded-full h-2 mt-2">
+                    <div class="bg-purple-500 h-2 rounded-full progress-bar" style="width: 0%" data-width="95%"></div>
+                  </div>
+                </div>
+
+                <div class="bg-orange-50 rounded-xl p-4 border border-orange-100">
+                  <div class="text-2xl font-bold text-gray-900 mb-1 counter" data-target="100">0</div>
+                  <div class="text-sm text-gray-600">% Sécurisé</div>
+                  <div class="w-full bg-orange-100 rounded-full h-2 mt-2">
+                    <div class="bg-orange-500 h-2 rounded-full progress-bar" style="width: 0%" data-width="100%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Activity -->
+              <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-sm font-medium text-gray-700">Activité en temps réel</span>
+                  <div class="flex items-center space-x-1">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-xs text-green-600 font-medium">Live</span>
+                  </div>
+                </div>
+                <div class="space-y-2 text-xs font-mono">
+                  <div class="flex items-center text-gray-700">
+                    <span class="text-gray-400 mr-2">[08:00:00]</span>
+                    <span class="text-blue-600 mr-2 font-medium">MONITOR</span>
+                    <span>Surveillance active</span>
+                  </div>
+                  <div class="flex items-center text-gray-700">
+                    <span class="text-gray-400 mr-2">[08:02:15]</span>
+                    <span class="text-red-600 mr-2 font-medium">ALERT</span>
+                    <span>Tentative détectée</span>
+                  </div>
+                  <div class="flex items-center text-gray-700">
+                    <span class="text-gray-400 mr-2">[08:02:16]</span>
+                    <span class="text-green-600 mr-2 font-medium">BLOCK</span>
+                    <span>Menace neutralisée</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POURQUOI NOUS CHOISIR -->
+<section class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 fade-in-up">
+      <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+        Pourquoi choisir
+        <span class="text-blue-600">2IEM_Security</span> ?
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        Solutions modulaires et intelligentes pour tous les besoins : infrastructures critiques, cloud et plus encore.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Détection -->
+      <div class="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 fade-in-up">
+        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:scale-110 transition-all duration-300">
+          <svg class="w-8 h-8 text-blue-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Détection temps réel</h3>
+        <p class="text-gray-600 leading-relaxed mb-6">Analyse comportementale avancée et signatures intelligentes pour repérer toute anomalie instantanément.</p>
+        <div class="flex items-center text-blue-600 font-semibold group-hover:translate-x-2 transition-transform">
+          <span>En savoir plus</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Blocage -->
+      <div class="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-orange-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 fade-in-up" style="animation-delay: 0.2s;">
+        <div class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-600 group-hover:scale-110 transition-all duration-300">
+          <svg class="w-8 h-8 text-orange-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Blocage automatique</h3>
+        <p class="text-gray-600 leading-relaxed mb-6">Isolation et filtrage instantané des IP malveillantes avec intelligence artificielle pour éviter toute propagation.</p>
+        <div class="flex items-center text-orange-600 font-semibold group-hover:translate-x-2 transition-transform">
+          <span>En savoir plus</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Alertes -->
+      <div class="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-green-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 fade-in-up" style="animation-delay: 0.4s;">
+        <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:scale-110 transition-all duration-300">
+          <svg class="w-8 h-8 text-green-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4.828 7l2.586 2.586a2 2 0 000 2.828l6.364 6.364"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Alertes intelligentes</h3>
+        <p class="text-gray-600 leading-relaxed mb-6">Rapports PDF détaillés, notifications SMS et e-mails pour un suivi complet et proactif des incidents.</p>
+        <div class="flex items-center text-green-600 font-semibold group-hover:translate-x-2 transition-transform">
+          <span>En savoir plus</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOS VERSIONS -->
+<section class="py-24 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 fade-in-up">
+      <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+        Nos 3 versions adaptées à
+        <span class="text-blue-600">vos besoins</span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        De la protection de base à la suite Enterprise, choisissez la solution qui correspond parfaitement à votre infrastructure.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Black Vault -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 fade-in-up overflow-hidden">
+        <div class="p-6 bg-blue-50 border-b border-blue-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-gray-900">Black Vault</h3>
+            <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+          </div>
+          <p class="text-blue-700 font-medium">Protection complète & avancée</p>
+        </div>
+
+        <div class="p-6 space-y-4">
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Détection DoS/DDoS avancée</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Blocage IP dynamique intelligent</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Alertes PDF/Email/SMS</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Dashboard avancé & Analytics</span>
+          </div>
+        </div>
+
+        <div class="p-6 pt-0">
+          <a href="{% url 'pages:versions' %}"
+             class="block text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+            Découvrir Aegis Sec
+          </a>
+        </div>
+      </div>
+
+      <!-- Dôme (Populaire) -->
+      <div class="bg-white rounded-2xl shadow-lg border-2 border-orange-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative fade-in-up overflow-hidden" style="animation-delay: 0.2s;">
+        <!-- Badge Populaire -->
+        <div class="p-6 bg-orange-50 border-b border-orange-100 mt-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-gray-900">Dôme</h3>
+            <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 7v2m0 4h.01"/>
+              </svg>
+            </div>
+          </div>
+          <p class="text-orange-700 font-medium">Protection intermédiaire optimale</p>
+        </div>
+
+        <div class="p-6 space-y-4">
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Détection DoS/DDoS standard</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Blocage IP manuel</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Alertes PDF/Email/SMS</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Dashboard standard</span>
+          </div>
+        </div>
+
+        <div class="p-6 pt-0">
+          <a href="{% url 'pages:versions' %}"
+             class="block text-center bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+            Découvrir Dôme
+          </a>
+        </div>
+      </div>
+
+      <!-- Aegis Sec -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 fade-in-up overflow-hidden" style="animation-delay: 0.4s;">
+        <div class="p-6 bg-gray-50 border-b border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-gray-900">Aegis Sec</h3>
+            <div class="w-12 h-12 bg-gray-700 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+            </div>
+          </div>
+          <p class="text-gray-600 font-medium">Protection de base essentielle</p>
+        </div>
+
+        <div class="p-6 space-y-4">
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Détection basique</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Pas de blocage automatique</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Alertes PDF/Email/SMS</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mr-3">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <span class="text-gray-700">Dashboard basique</span>
+          </div>
+        </div>
+
+        <div class="p-6 pt-0">
+          <a href="{% url 'pages:versions' %}"
+             class="block text-center bg-gray-700 hover:bg-gray-800 text-white py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+            Découvrir Black Vault
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-12 fade-in-up" style="animation-delay: 0.6s;">
+      <a href="{% url 'pages:versions' %}"
+         class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold text-lg group transition-colors">
+        Comparer toutes les versions en détail
+        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO ÉPURÉ -->
+<section id="demo" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 fade-in-up">
+      <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+        Découvrez
+        <span class="text-blue-600">2IEM_Security</span>
+        en action
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        Console temps réel de votre tableau de bord de sécurité avec surveillance intelligente et réaction instantanée.
+      </p>
+    </div>
+
+    <div class="relative fade-in-up" style="animation-delay: 0.3s;">
+      <!-- Terminal Épuré -->
+      <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <!-- Terminal Header -->
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+<!--              <span class="w-3 h-3 bg-red-400 rounded-full"></span>-->
+<!--              <span class="w-3 h-3 bg-yellow-400 rounded-full"></span>-->
+<!--              <span class="w-3 h-3 bg-green-400 rounded-full"></span>-->
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="text-gray-600 font-medium text-sm">2IEM_Security Dashboard v2.1.0</span>
+              <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-green-600 text-sm font-medium">Live</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Content -->
+        <div class="p-8 bg-gray-50">
+          <div class="font-mono text-sm space-y-3" id="terminal-content">
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:00:00]</span>
+              <span class="text-blue-600 mr-3 font-semibold">SYSTEM</span>
+              <span class="text-gray-700">2IEM_Security initialisé avec succès</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:00:01]</span>
+              <span class="text-blue-600 mr-3 font-semibold">MONITOR</span>
+              <span class="text-gray-700">Surveillance active ports 80, 443, 22, 8080</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:00:05]</span>
+              <span class="text-purple-600 mr-3 font-semibold">SCAN</span>
+              <span class="text-gray-700">Analyse comportementale activée</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:02:15]</span>
+              <span class="text-red-600 mr-3 font-semibold">ALERT</span>
+              <span class="text-gray-700">⚠️ Tentative DoS détectée depuis 192.168.1.100</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:02:16]</span>
+              <span class="text-orange-600 mr-3 font-semibold">ANALYZE</span>
+              <span class="text-gray-700">Analyse de la menace en cours...</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:02:17]</span>
+              <span class="text-purple-600 mr-3 font-semibold">BLOCK</span>
+              <span class="text-gray-700">🛡️ IP 192.168.1.100 bloquée automatiquement</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:02:18]</span>
+              <span class="text-green-600 mr-3 font-semibold">SUCCESS</span>
+              <span class="text-gray-700">✅ Menace neutralisée - Système sécurisé</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:02:19]</span>
+              <span class="text-indigo-600 mr-3 font-semibold">REPORT</span>
+              <span class="text-gray-700">📧 Rapport d'incident envoyé par email</span>
+            </div>
+            <div class="flex items-center animate-pulse">
+              <span class="text-gray-400 mr-3">[2025-06-24 08:02:20]</span>
+              <span class="text-blue-600 mr-3 font-semibold">MONITOR</span>
+              <span class="text-gray-700">▉ Surveillance continue active...</span>
+            </div>
+          </div>
+
+          <!-- Stats Bar Épuré -->
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl p-4 border border-green-100">
+              <div class="text-green-600 text-sm font-medium mb-1">Menaces bloquées</div>
+              <div class="text-2xl font-bold text-gray-900 counter" data-target="1247">0</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-blue-100">
+              <div class="text-blue-600 text-sm font-medium mb-1">Connexions surveillées</div>
+              <div class="text-2xl font-bold text-gray-900 counter" data-target="15420">0</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-purple-100">
+              <div class="text-purple-600 text-sm font-medium mb-1">Temps de réaction</div>
+              <div class="text-2xl font-bold text-gray-900">&lt;1s</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-orange-100">
+              <div class="text-orange-600 text-sm font-medium mb-1">Uptime</div>
+              <div class="text-2xl font-bold text-gray-900">99.9%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center fade-in-up" style="animation-delay: 0.6s;">
+      <a href="{% url 'pages:acheter' %}"
+         class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Protégez votre système maintenant
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL ÉPURÉ -->
+<section class="py-24 bg-gray-200 text-dark text-center">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="fade-in-up">
+      <h2 class="text-4xl md:text-5xl font-black mb-8 leading-tight">
+        Prêt à sécuriser votre
+        <span class="text-blue-400">infrastructure</span> ?
+      </h2>
+      <p class="mb-12 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        Rejoignez les entreprises maliennes qui font confiance à 2IEM_Security pour leur cybersécurité et dormez sur vos deux oreilles.
+      </p>
+
+      <!-- Trust Badges -->
+      <div class="flex flex-wrap justify-center items-center gap-8 mb-12 text-gray-400">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span>100% Malien</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span>Support 24/24</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span>Installation rapide</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-6">
+        <a href="{% url 'pages:acheter' %}"
+           class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          Commencer maintenant
+        </a>
+
+        <a href="{% url 'pages:contact' %}"
+           class="inline-flex items-center justify-center border-2 border-gray-600 hover:border-gray-500 bg-green-200 hover:bg-gray-600 text-dark px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          Nous contacter
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Animations épurées */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Progress bars animation */
+.progress-bar {
+  transition: width 2s ease-in-out;
+}
+
+/* Hover effects épurés */
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+}
+
+.group:hover .group-hover\:translate-x-2 {
+  transform: translateX(0.5rem);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .fade-in-up {
+    animation-delay: 0s !important;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus states pour l'accessibilité */
+a:focus, button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+</style>
+
+<script>
+// Animation au scroll optimisée
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationPlayState = 'running';
+
+      // Animer les compteurs
+      const counters = entry.target.querySelectorAll('.counter');
+      counters.forEach(counter => {
+        animateCounter(counter);
+      });
+
+      // Animer les barres de progression
+      const progressBars = entry.target.querySelectorAll('.progress-bar');
+      progressBars.forEach(bar => {
+        const width = bar.getAttribute('data-width');
+        if (width) {
+          setTimeout(() => {
+            bar.style.width = width;
+          }, 500);
+        }
+      });
+    }
+  });
+}, observerOptions);
+
+// Observer tous les éléments avec animation
+document.querySelectorAll('.fade-in-up').forEach(el => {
+  observer.observe(el);
+});
+
+// Animation des compteurs optimisée
+function animateCounter(element) {
+  const target = parseFloat(element.getAttribute('data-target'));
+  const duration = 1500;
+  const step = target / (duration / 16);
+  let current = 0;
+
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+
+    if (target % 1 === 0) {
+      element.textContent = Math.floor(current);
+    } else {
+      element.textContent = current.toFixed(1);
+    }
+  }, 16);
+}
+
+// Animation du terminal épurée
+function animateTerminal() {
+  const terminalContent = document.getElementById('terminal-content');
+  if (!terminalContent) return;
+
+  const lines = terminalContent.children;
+
+  // Masquer toutes les lignes initialement
+  Array.from(lines).forEach(line => {
+    line.style.opacity = '0';
+    line.style.transform = 'translateX(-10px)';
+  });
+
+  // Animer chaque ligne avec un délai
+  Array.from(lines).forEach((line, index) => {
+    setTimeout(() => {
+      line.style.transition = 'all 0.4s ease';
+      line.style.opacity = '1';
+      line.style.transform = 'translateX(0)';
+    }, index * 200);
+  });
+}
+
+// Démarrer l'animation du terminal quand la section est visible
+const terminalObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateTerminal();
+      terminalObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const demoSection = document.getElementById('demo');
+if (demoSection) {
+  terminalObserver.observe(demoSection);
+}
+
+// Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+  // Démarrer les animations après un court délai
+  setTimeout(() => {
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+      el.style.animationPlayState = 'running';
+    });
+  }, 100);
+});
+</script>
+{% endblock %}

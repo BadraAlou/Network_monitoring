@@ -1,0 +1,447 @@
+{% extends './base.html' %}
+{% block title %}Honeypots | 2IEM_Security{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-white">
+    <!-- En-tête avec gradient bleu/gris pour les honeypots -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold text-white flex items-center">
+                        🍯 Honeypots - Pièges de Sécurité
+                    </h1>
+                    <p class="text-blue-100 mt-2">Surveillance des tentatives d'intrusion capturées</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4">
+                    <div class="text-white text-center">
+                        <div class="text-3xl font-bold">{{ logs.count|default:0 }}</div>
+                        <div class="text-sm text-blue-100">Tentatives capturées</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Statistiques des honeypots -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6 border border-red-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-red-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-red-600">Tentatives SSH</p>
+                        <p class="text-2xl font-bold text-red-900" id="sshCount">{{ ssh_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-amber-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-amber-600">Tentatives FTP</p>
+                        <p class="text-2xl font-bold text-amber-900" id="ftpCount">{{ ftp_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 border border-emerald-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-emerald-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-emerald-600">Tentatives HTTP</p>
+                        <p class="text-2xl font-bold text-emerald-900" id="httpCount">{{ http_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-slate-500 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-slate-600">Autres Services</p>
+                        <p class="text-2xl font-bold text-slate-900" id="otherCount">{{ other_count|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres et contrôles -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path>
+                    </svg>
+                    Filtres et Recherche
+                </h3>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse mr-2"></div>
+                        <span class="text-sm text-gray-600">Surveillance active</span>
+                    </div>
+                    <button onclick="refreshData()"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">
+                        🔄 Actualiser
+                    </button>
+                </div>
+            </div>
+
+            <form method="get" class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Service ciblé</label>
+                        <select name="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                            <option value="">-- Tous les services --</option>
+                            <option value="SSH" {% if request.GET.service == "SSH" %}selected{% endif %}>🔐 SSH (Port 22)</option>
+                            <option value="FTP" {% if request.GET.service == "FTP" %}selected{% endif %}>📁 FTP (Port 21)</option>
+                            <option value="HTTP" {% if request.GET.service == "HTTP" %}selected{% endif %}>🌐 HTTP (Port 80)</option>
+                            <option value="HTTPS" {% if request.GET.service == "HTTPS" %}selected{% endif %}>🔒 HTTPS (Port 443)</option>
+                            <option value="TELNET" {% if request.GET.service == "TELNET" %}selected{% endif %}>📟 TELNET (Port 23)</option>
+                            <option value="SMTP" {% if request.GET.service == "SMTP" %}selected{% endif %}>📧 SMTP (Port 25)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Adresse IP</label>
+                        <input type="text" name="ip_search" value="{{ request.GET.ip_search }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                               placeholder="192.168.1.1 ou 10.0.0">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Port</label>
+                        <input type="number" name="port" value="{{ request.GET.port }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                               placeholder="22, 80, 443...">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Période</label>
+                        <select name="period" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                            <option value="">-- Toute la période --</option>
+                            <option value="1h" {% if request.GET.period == "1h" %}selected{% endif %}>Dernière heure</option>
+                            <option value="24h" {% if request.GET.period == "24h" %}selected{% endif %}>Dernières 24h</option>
+                            <option value="7d" {% if request.GET.period == "7d" %}selected{% endif %}>7 derniers jours</option>
+                            <option value="30d" {% if request.GET.period == "30d" %}selected{% endif %}>30 derniers jours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-6 space-x-4">
+                    <a href="{% url 'theme:honeypot' %}" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all">
+                        🔄 Réinitialiser
+                    </a>
+                    <button type="submit" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
+                        🔍 Filtrer les tentatives
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tableau des tentatives capturées -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4">
+                <h3 class="text-xl font-bold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"></path>
+                    </svg>
+                    Tentatives d'Intrusion Capturées
+                </h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <div class="max-h-[600px] overflow-y-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-slate-50 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">🌐 Adresse IP</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">🚪 Port</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">🔧 Service</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">💬 Message/Payload</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-slate-700 uppercase tracking-wider">📅 Date & Heure</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for log in logs %}
+                            <tr class="hover:bg-blue-50 transition-all duration-200 border-l-4 border-blue-400">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 font-mono">{{ log.ip_address }}</div>
+                                            <div class="text-sm text-gray-500">Attaquant détecté</div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                                        {{ log.port }}
+                                    </span>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if log.service == "SSH" %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-200">
+                                            🔐 SSH
+                                        </span>
+                                    {% elif log.service == "FTP" %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800 border border-amber-200">
+                                            📁 FTP
+                                        </span>
+                                    {% elif log.service == "HTTP" %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                            🌐 HTTP
+                                        </span>
+                                    {% elif log.service == "HTTPS" %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                            🔒 HTTPS
+                                        </span>
+                                    {% elif log.service == "TELNET" %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 border border-purple-200">
+                                            📟 TELNET
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800 border border-slate-200">
+                                            🔧 {{ log.service|default:"Inconnu" }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900 max-w-xs">
+                                        <div class="truncate font-mono bg-gray-50 px-2 py-1 rounded border" title="{{ log.message_sent }}">
+                                            {{ log.message_sent|default:"Aucun message capturé"|truncatechars:50 }}
+                                        </div>
+                                        {% if log.message_sent|length > 50 %}
+                                        <button onclick="showFullMessage('{{ log.id }}', '{{ log.message_sent|escapejs }}')"
+                                                class="text-xs text-blue-600 hover:text-blue-800 mt-1">
+                                            Voir le message complet
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <div class="flex flex-col">
+                                        <span class="font-medium">{{ log.detected_on|date:"d/m/Y" }}</span>
+                                        <span class="text-gray-500">{{ log.detected_on|date:"H:i:s" }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="px-6 py-12 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune tentative détectée</h3>
+                                        <p class="text-gray-500">Vos honeypots sont actifs mais aucune intrusion n'a été capturée.</p>
+                                        <p class="text-sm text-gray-400 mt-2">C'est plutôt une bonne nouvelle ! 🛡️</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations sur les honeypots -->
+        <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                À propos des Honeypots 2IEM Security
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
+                <div>
+                    <h5 class="font-semibold text-blue-800 mb-2">🍯 Qu'est-ce qu'un Honeypot ?</h5>
+                    <p>Un honeypot est un système piège conçu pour attirer et détecter les tentatives d'intrusion. Il simule des services vulnérables pour capturer les activités malveillantes.</p>
+                </div>
+                <div>
+                    <h5 class="font-semibold text-blue-800 mb-2">🎯 Services surveillés</h5>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>SSH (Port 22) - Connexions à distance</li>
+                        <li>FTP (Port 21) - Transferts de fichiers</li>
+                        <li>HTTP/HTTPS (Ports 80/443) - Services web</li>
+                        <li>TELNET (Port 23) - Connexions non sécurisées</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour afficher le message complet -->
+<div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-white">💬 Message/Payload Capturé</h3>
+            <button onclick="closeMessageModal()" class="text-white hover:text-gray-200 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="bg-gray-50 rounded-lg p-4 font-mono text-sm">
+                <pre id="fullMessageContent" class="whitespace-pre-wrap text-gray-800"></pre>
+            </div>
+            <div class="flex justify-end mt-4 space-x-4">
+                <button onclick="closeMessageModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all">
+                    Fermer
+                </button>
+                <button onclick="copyMessage()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">
+                    📋 Copier
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentMessage = '';
+
+// Afficher le message complet
+function showFullMessage(logId, message) {
+    currentMessage = message;
+    document.getElementById('fullMessageContent').textContent = message;
+    document.getElementById('messageModal').classList.remove('hidden');
+}
+
+// Fermer le modal
+function closeMessageModal() {
+    document.getElementById('messageModal').classList.add('hidden');
+}
+
+// Copier le message
+function copyMessage() {
+    if (currentMessage) {
+        navigator.clipboard.writeText(currentMessage).then(() => {
+            showToast('✅ Message copié dans le presse-papiers!');
+        }).catch(() => {
+            showToast('❌ Erreur lors de la copie');
+        });
+    }
+}
+
+// Actualiser les données
+function refreshData() {
+    location.reload();
+}
+
+// Toast notifications
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.innerHTML = message;
+    toast.className = 'fixed bottom-4 right-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('translate-y-full', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+// Fermer le modal en cliquant à l'extérieur
+document.getElementById('messageModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeMessageModal();
+    }
+});
+
+// Fermer avec Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeMessageModal();
+    }
+});
+
+// Auto-refresh toutes les 30 secondes
+setInterval(function() {
+    const indicator = document.querySelector('.animate-pulse');
+    if (indicator) {
+        indicator.style.opacity = '0.5';
+        setTimeout(() => {
+            indicator.style.opacity = '1';
+        }, 200);
+    }
+}, 30000);
+</script>
+
+<style>
+/* Animations personnalisées */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slideIn {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Scrollbar personnalisée */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
+}
+
+/* Effet de survol pour les lignes de honeypot */
+tbody tr:hover {
+    background-color: #eff6ff !important;
+    transform: translateX(2px);
+}
+
+/* Animation pour les nouvelles tentatives */
+@keyframes newAttempt {
+    0% { background-color: #dbeafe; }
+    50% { background-color: #bfdbfe; }
+    100% { background-color: transparent; }
+}
+
+.new-attempt {
+    animation: newAttempt 2s ease-in-out;
+}
+</style>
+{% endblock %}

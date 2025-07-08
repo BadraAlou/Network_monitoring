@@ -1,0 +1,125 @@
+{% extends './base.html' %}
+{% block title %}Activer ma licence – 2IEM Security{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="bg-blue-400  text-white py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl lg:text-5xl font-bold mb-4">Activez votre licence 2IEM Security</h1>
+    <p class="text-xl lg:text-2xl text-gray-900 max-w-3xl mx-auto">
+      Saisissez votre clé reçue par email pour activer immédiatement votre protection.
+    </p>
+  </div>
+</section>
+
+<!-- ACTIVATION FORM -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div class="p-8">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">Activation de licence</h2>
+          <p class="text-gray-600">Entrez votre clé et l'email associé pour valider l'activation.</p>
+        </div>
+
+        <form method="post" id="activationForm" class="space-y-6">
+          {% csrf_token %}
+          <!-- License Key -->
+          <div>
+            <label for="license_key" class="block text-sm font-semibold text-gray-900 mb-2">Clé de licence *</label>
+            <input name="license_key" id="license_key" type="text" required
+                   maxlength="19" placeholder="2IEM-XXXX-XXXX-XXXX"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-center font-mono tracking-widest"/>
+            <p class="text-sm text-gray-500 mt-1">Format: 2IEM-XXXX-XXXX-XXXX</p>
+          </div>
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">Email de confirmation *</label>
+            <input name="email" id="email" type="email" required
+                   placeholder="votre@email.com"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+            <p class="text-sm text-gray-500 mt-1">L'adresse utilisée lors de l'achat</p>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold text-lg transition-colors inline-flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
+              </svg>
+              Activer ma licence
+            </button>
+          </div>
+        </form>
+
+        <!-- Messages -->
+        {% if success %}
+        <div class="mt-8 bg-green-50 border-l-4 border-green-500 p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-green-800">Licence activée avec succès !</p>
+              <p class="mt-1 text-sm text-green-700">Produit : <strong>{{ activated_product }}</strong></p>
+            </div>
+          </div>
+        </div>
+        {% elif error %}
+        <div class="mt-8 bg-red-50 border-l-4 border-red-500 p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-red-800">Erreur d’activation</p>
+              <p class="mt-1 text-sm text-red-700">{{ error }}</p>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HELP SECTION -->
+<section class="py-20 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">Comment trouver votre clé ?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {% for tip in tips %}
+      <div class="bg-gray-50  rounded-4xl p-6 flex">
+        <div class="flex-shrink-0 mr-4">
+          <svg class="w-6 h-6 text-{{ tip.color }}-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ tip.icon }}"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">{{ tip.title }}</h3>
+          <p class="text-gray-600 mt-1">{{ tip.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-12">
+      <a href="/contact" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold inline-flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z"/>
+        </svg>
+        Contacter le support
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

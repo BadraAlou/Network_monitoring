@@ -1,0 +1,44 @@
+{% extends './base.html' %}
+{% block title %}Logs de Scan | 2IEM_Security{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <h2 class="text-2xl font-bold text-blue-800 mb-6 flex items-center">
+        🧾 Historique des Scans Réseau
+    </h2>
+
+    <p class="text-sm text-gray-500 mb-4">Logs chargés : {{ logs|length }}</p>
+
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">🕒 Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">🖥️ Appareil</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">🔍 Scan par</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">📋 Événement</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for log in logs %}
+                <tr class="hover:bg-gray-100 transition">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ log.scan_time|date:"d/m/Y H:i" }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ log.device.ip_address }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ log.scanned_by.username }}</td>
+                    <td class="px-6 py-4 whitespace-pre-wrap text-sm text-gray-900">
+                        <details>
+                            <summary class="cursor-pointer text-blue-600">Voir détails</summary>
+                            <pre class="bg-gray-100 p-2 rounded mt-1 text-xs">{{ log.event }}</pre>
+                        </details>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-gray-500">Aucun log de scan disponible.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
